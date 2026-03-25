@@ -8,6 +8,25 @@ const GRAY = [85, 85, 85];
 const BLACK = [51, 51, 51];
 const LIGHT_PINK = [253, 242, 247];
 
+// Sanitize text for jsPDF (helvetica doesn't support many Unicode chars)
+function s(text) {
+  if (!text) return '';
+  return String(text)
+    .replace(/\u2713/g, 'v')       // ✓ -> v
+    .replace(/\u2605/g, '*')       // ★ -> *
+    .replace(/\u2192/g, '->')      // → -> ->
+    .replace(/\u2190/g, '<-')      // ← -> <-
+    .replace(/\u2013/g, '-')       // – (en dash) -> -
+    .replace(/\u2014/g, '--')      // — (em dash) -> --
+    .replace(/\u201E/g, '"')       // „ -> "
+    .replace(/\u201C/g, '"')       // " -> "
+    .replace(/\u201D/g, '"')       // " -> "
+    .replace(/\u00D7/g, 'x')      // × -> x
+    .replace(/\u2026/g, '...')     // … -> ...
+    .replace(/\u2019/g, "'")       // ' -> '
+    .replace(/\u2018/g, "'");      // ' -> '
+}
+
 function addHeader(doc) {
   const pageWidth = doc.internal.pageSize.getWidth();
 
@@ -54,8 +73,8 @@ function addFooter(doc, pageNum) {
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8);
   doc.setTextColor(150, 150, 150);
-  doc.text('Der MOBBIT – Mobbing frühzeitig erkennen', 14, pageHeight - 12);
-  doc.text(`© Copyright – Alle Rechte bei IKOBE`, pageWidth / 2, pageHeight - 12, { align: 'center' });
+  doc.text(s('Der MOBBIT - Mobbing fruehzeitig erkennen'), 14, pageHeight - 12);
+  doc.text(s('(c) Copyright - Alle Rechte bei IKOBE'), pageWidth / 2, pageHeight - 12, { align: 'center' });
   doc.text(`Seite ${pageNum}`, pageWidth - 14, pageHeight - 12, { align: 'right' });
 }
 
@@ -74,7 +93,7 @@ function addSectionTitle(doc, title, y, contentWidth) {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(14);
   doc.setTextColor(...PINK);
-  doc.text(title, 14, y);
+  doc.text(s(title), 14, y);
   return y + 8;
 }
 
@@ -83,7 +102,7 @@ function addSubTitle(doc, title, y) {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(11);
   doc.setTextColor(...BLACK);
-  doc.text(title, 14, y);
+  doc.text(s(title), 14, y);
   return y + 7;
 }
 
@@ -92,7 +111,7 @@ function addParagraph(doc, text, y, contentWidth) {
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(9);
   doc.setTextColor(...GRAY);
-  const lines = doc.splitTextToSize(text, contentWidth);
+  const lines = doc.splitTextToSize(s(text), contentWidth);
   doc.text(lines, 14, y);
   return y + lines.length * 4 + 4;
 }
@@ -149,7 +168,7 @@ export function generatePDF(totalScore, level, details) {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(11);
   doc.setTextColor(255, 255, 255);
-  doc.text(`${level.range}: ${level.title}`, pageWidth / 2, boxY + 54, { align: 'center' });
+  doc.text(s(`${level.range}: ${level.title}`), pageWidth / 2, boxY + 54, { align: 'center' });
 
   // Date
   const todayStr = new Date().toLocaleDateString('de-DE', {
@@ -177,15 +196,15 @@ export function generatePDF(totalScore, level, details) {
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8);
   doc.setTextColor(...GRAY);
-  const hinweis = 'Achtung! Sonderfragen 3, 9, 14, 19, 31: bei Antwort 3/4 → 10 Punkte. Fragen 16, 32: bei Antwort 3/4 → 5 Punkte.';
-  doc.text(hinweis, 14, y);
+  const hinweis = 'Achtung! Sonderfragen 3, 9, 14, 19, 31: bei Antwort 3/4 -> 10 Punkte. Fragen 16, 32: bei Antwort 3/4 -> 5 Punkte.';
+  doc.text(s(hinweis), 14, y);
   y += 6;
 
   const tableData = details.map(d => [
     String(d.id),
-    d.text,
-    `${d.answer} – ${answerLabels[d.answer]?.label || ''}`,
-    `${d.points}${d.bonus ? ' ★' : ''}`,
+    s(d.text),
+    s(`${d.answer} - ${answerLabels[d.answer]?.label || ''}`),
+    `${d.points}${d.bonus ? ' *' : ''}`,
   ]);
 
   tableData.push(['', '', 'Gesamtpunktzahl:', String(totalScore)]);
@@ -243,10 +262,10 @@ export function generatePDF(totalScore, level, details) {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(16);
   doc.setTextColor(...PINK);
-  doc.text(`${level.range}:`, 14, y + 5);
+  doc.text(s(`${level.range}:`), 14, y + 5);
   y += 12;
   doc.setFontSize(14);
-  doc.text(level.title, 14, y);
+  doc.text(s(level.title), 14, y);
   y += 12;
 
   // Description
@@ -263,7 +282,7 @@ export function generatePDF(totalScore, level, details) {
     doc.setTextColor(...GRAY);
     level.parentAdvice.forEach((item, i) => {
       y = checkPageBreak(doc, y, 15);
-      const lines = doc.splitTextToSize(`${i + 1}. ${item}`, contentWidth - 5);
+      const lines = doc.splitTextToSize(s(`${i + 1}. ${item}`), contentWidth - 5);
       doc.text(lines, 16, y);
       y += lines.length * 4 + 3;
     });
@@ -277,7 +296,7 @@ export function generatePDF(totalScore, level, details) {
     doc.setTextColor(...GRAY);
     level.childAdvice.forEach((item) => {
       y = checkPageBreak(doc, y, 12);
-      const lines = doc.splitTextToSize(`... ${item}`, contentWidth - 5);
+      const lines = doc.splitTextToSize(s(`... ${item}`), contentWidth - 5);
       doc.text(lines, 16, y);
       y += lines.length * 4 + 2;
     });
@@ -291,7 +310,7 @@ export function generatePDF(totalScore, level, details) {
     doc.setTextColor(...GRAY);
     level.dontDo.forEach((item, i) => {
       y = checkPageBreak(doc, y, 12);
-      const lines = doc.splitTextToSize(`${i + 1}. ${item}`, contentWidth - 5);
+      const lines = doc.splitTextToSize(s(`${i + 1}. ${item}`), contentWidth - 5);
       doc.text(lines, 16, y);
       y += lines.length * 4 + 3;
     });
@@ -325,10 +344,10 @@ export function generatePDF(totalScore, level, details) {
     y = checkPageBreak(doc, y, 8);
     if (link.url) {
       doc.setTextColor(...PINK);
-      doc.textWithLink(link.label, 14, y, { url: link.url });
+      doc.textWithLink(s(link.label), 14, y, { url: link.url });
     } else {
       doc.setTextColor(...GRAY);
-      doc.text(`${link.label}: ${link.phone}`, 14, y);
+      doc.text(s(`${link.label}: ${link.phone}`), 14, y);
     }
     y += 5;
   });
@@ -340,7 +359,7 @@ export function generatePDF(totalScore, level, details) {
   contactsInfo.infoLinks.forEach(link => {
     y = checkPageBreak(doc, y, 8);
     doc.setTextColor(...PINK);
-    doc.textWithLink(link.label, 14, y, { url: link.url });
+    doc.textWithLink(s(link.label), 14, y, { url: link.url });
     y += 5;
   });
 
@@ -359,7 +378,7 @@ export function generatePDF(totalScore, level, details) {
   doc.setTextColor(...BLACK);
   const closingLines = mobbingInfoText.closing.split('\n');
   closingLines.forEach(line => {
-    doc.text(line, 14, y);
+    doc.text(s(line), 14, y);
     y += 5;
   });
 
@@ -374,7 +393,7 @@ export function generatePDF(totalScore, level, details) {
   doc.setTextColor(...GRAY);
   weitereAngebote.buecher.items.forEach(b => {
     y = checkPageBreak(doc, y, 8);
-    doc.text(`✓  ${b.name}, ${b.verlag}`, 16, y);
+    doc.text(s(`v  ${b.name}, ${b.verlag}`), 16, y);
     y += 5;
   });
   y += 2;
@@ -386,8 +405,8 @@ export function generatePDF(totalScore, level, details) {
   doc.setTextColor(...GRAY);
   weitereAngebote.tests1.items.forEach(t => {
     y = checkPageBreak(doc, y, 12);
-    const text = t.description ? `✓  ${t.name} – ${t.description}` : `✓  ${t.name}`;
-    const lines = doc.splitTextToSize(text, contentWidth - 5);
+    const text = t.description ? `v  ${t.name} - ${t.description}` : `v  ${t.name}`;
+    const lines = doc.splitTextToSize(s(text), contentWidth - 5);
     doc.text(lines, 16, y);
     y += lines.length * 4 + 2;
   });
@@ -401,8 +420,8 @@ export function generatePDF(totalScore, level, details) {
   doc.setTextColor(...GRAY);
   weitereAngebote.tests2.items.forEach(t => {
     y = checkPageBreak(doc, y, 12);
-    const text = t.description ? `✓  ${t.name} – ${t.description}` : `✓  ${t.name}`;
-    const lines = doc.splitTextToSize(text, contentWidth - 5);
+    const text = t.description ? `v  ${t.name} - ${t.description}` : `v  ${t.name}`;
+    const lines = doc.splitTextToSize(s(text), contentWidth - 5);
     doc.text(lines, 16, y);
     y += lines.length * 4 + 2;
   });
@@ -417,9 +436,9 @@ export function generatePDF(totalScore, level, details) {
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(9);
   doc.setTextColor(...GRAY);
-  doc.text(`Mobil/WhatsApp/SMS: ${weitereAngebote.contact.phone}`, 14, y);
+  doc.text(s(`Mobil/WhatsApp/SMS: ${weitereAngebote.contact.phone}`), 14, y);
   y += 5;
-  doc.text(`E-Mail: ${weitereAngebote.contact.email}`, 14, y);
+  doc.text(s(`E-Mail: ${weitereAngebote.contact.email}`), 14, y);
   y += 8;
 
   // === Autorenbrief (Seite 13) ===
@@ -431,7 +450,7 @@ export function generatePDF(totalScore, level, details) {
   doc.setTextColor(...PINK);
   const greetingLines = authorLetter.greeting.split('\n');
   greetingLines.forEach(line => {
-    doc.text(line, 14, y);
+    doc.text(s(line), 14, y);
     y += 7;
   });
   y += 4;
@@ -447,7 +466,7 @@ export function generatePDF(totalScore, level, details) {
   doc.setTextColor(...BLACK);
   const sigLines = authorLetter.signature.split('\n');
   sigLines.forEach(line => {
-    doc.text(line, 14, y);
+    doc.text(s(line), 14, y);
     y += 6;
   });
 
@@ -457,10 +476,10 @@ export function generatePDF(totalScore, level, details) {
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(9);
   doc.setTextColor(...GRAY);
-  doc.text(`Festnetz: ${authorLetter.contact.festnetz}`, 14, y); y += 5;
-  doc.text(`Mobil/WhatsApp/SMS: ${authorLetter.contact.mobil}`, 14, y); y += 5;
-  doc.text(`E-Mail: ${authorLetter.contact.email}`, 14, y); y += 5;
-  doc.text(`Webseite: ${authorLetter.contact.website}`, 14, y); y += 5;
+  doc.text(s(`Festnetz: ${authorLetter.contact.festnetz}`), 14, y); y += 5;
+  doc.text(s(`Mobil/WhatsApp/SMS: ${authorLetter.contact.mobil}`), 14, y); y += 5;
+  doc.text(s(`E-Mail: ${authorLetter.contact.email}`), 14, y); y += 5;
+  doc.text(s(`Webseite: ${authorLetter.contact.website}`), 14, y); y += 5;
 
   // Add footer to all pages
   const totalPages = doc.internal.getNumberOfPages();

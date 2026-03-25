@@ -135,46 +135,56 @@ export default function Questionnaire({ onFinish, savedAnswers, onProgressChange
             <div
               key={question.id}
               ref={el => questionRefs.current[question.id] = el}
-              className={`question-card ${isAnswered ? 'answered' : ''} ${specialClass} ${isUnanswered ? 'shake' : ''}`}
+              className={`question-card ${isAnswered ? 'answered' : ''} ${isUnanswered ? 'shake' : ''}`}
               role="group"
               aria-label={`Frage ${question.id}`}
             >
               <div className="question-text">
-                <span className="question-number">{question.id}.</span>
+                <span className="question-number">
+                  {question.id}.
+                  {question.special && (
+                    <span className={`special-dot ${question.special === 'high' ? 'dot-high' : 'dot-medium'}`} title="Sonderfrage (höhere Bewertung)">!</span>
+                  )}
+                </span>
                 <span id={`question-label-${question.id}`}>{question.text}</span>
               </div>
               <div className="slider-container">
-                <div className="slider-labels" aria-hidden="true">
+                <div className="slider-labels">
                   {answerLabels.map(option => (
-                    <span
+                    <button
                       key={option.value}
+                      type="button"
                       className={`slider-label ${answers[question.id] === option.value ? 'active' : ''}`}
                       onClick={() => handleAnswer(question.id, option.value)}
+                      aria-label={`${option.value}: ${option.label}`}
                     >
                       {option.value}
-                    </span>
+                    </button>
                   ))}
                 </div>
-                <div className="slider-track-wrapper">
-                  <input
-                    type="range"
-                    min="0"
-                    max="4"
-                    step="1"
-                    value={answers[question.id] ?? -1}
-                    className={`slider-input ${answers[question.id] !== undefined ? 'has-value' : ''}`}
-                    onChange={(e) => handleAnswer(question.id, parseInt(e.target.value))}
-                    aria-labelledby={`question-label-${question.id}`}
-                    aria-valuemin="0"
-                    aria-valuemax="4"
-                    aria-valuenow={answers[question.id] ?? undefined}
-                    aria-valuetext={answers[question.id] !== undefined ? answerLabels[answers[question.id]]?.label : 'Nicht beantwortet'}
+                <div
+                  className="slider-track-wrapper"
+                  onClick={(e) => {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+                    handleAnswer(question.id, Math.round(percent * 4));
+                  }}
+                >
+                  <div
+                    className={`slider-track ${answers[question.id] !== undefined ? 'has-value' : ''}`}
                     style={{
                       '--slider-percent': answers[question.id] !== undefined
                         ? `${(answers[question.id] / 4) * 100}%`
                         : '0%'
                     }}
-                  />
+                  >
+                    {answers[question.id] !== undefined && (
+                      <div
+                        className="slider-thumb"
+                        style={{ left: `${(answers[question.id] / 4) * 100}%` }}
+                      />
+                    )}
+                  </div>
                 </div>
                 <div className="slider-descriptions" aria-hidden="true">
                   <span className="slider-desc-left">nie / trifft gar nicht zu</span>
