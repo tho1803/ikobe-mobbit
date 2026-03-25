@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { calculateScore, getResultLevel } from '../utils/scoring';
-import { resultLevels, contactsInfo } from '../data/results';
+import { resultLevels, contactsInfo, mobbingInfoText, weitereAngebote, authorLetter } from '../data/results';
 import { answerLabels } from '../data/questions';
 import { generatePDF } from '../utils/pdfExport';
 
@@ -197,13 +197,87 @@ export default function ResultPage({ answers, onRestart }) {
         ))}
       </div>
 
+      {/* Mobbing Info (Seite 11 links) */}
+      <div className="mobbing-info-section">
+        <h2>{mobbingInfoText.title}</h2>
+        {mobbingInfoText.paragraphs.map((para, i) => (
+          <p key={i}>{para}</p>
+        ))}
+        <p className="mobbing-info-closing">
+          {mobbingInfoText.closing.split('\n').map((line, i) => (
+            <span key={i}>{line}<br /></span>
+          ))}
+        </p>
+      </div>
+
+      {/* Weitere Angebote (Seite 12) */}
+      <div className="weitere-angebote-section">
+        <h2>{weitereAngebote.title1}</h2>
+
+        <h3>{weitereAngebote.buecher.title}</h3>
+        <ul className="angebote-list">
+          {weitereAngebote.buecher.items.map((b, i) => (
+            <li key={i}>{b.name}, {b.verlag}</li>
+          ))}
+        </ul>
+        <p>{weitereAngebote.buecher.description}</p>
+
+        <h3>{weitereAngebote.tests1.title}</h3>
+        {weitereAngebote.tests1.items.map((t, i) => (
+          <div key={i} className="angebote-test-item">
+            <strong>{t.name}</strong>
+            {t.description && <span> – {t.description}</span>}
+          </div>
+        ))}
+
+        <h2 style={{ marginTop: '32px' }}>{weitereAngebote.title2}</h2>
+        <h3>{weitereAngebote.tests2.title}</h3>
+        {weitereAngebote.tests2.items.map((t, i) => (
+          <div key={i} className="angebote-test-item">
+            <strong>{t.name}</strong>
+            {t.description && <span> – {t.description}</span>}
+          </div>
+        ))}
+
+        <div className="angebote-contact">
+          <p>{weitereAngebote.contact.websiteIntro} <a href={`https://${weitereAngebote.contact.website}`} target="_blank" rel="noopener noreferrer">{weitereAngebote.contact.website}</a></p>
+          <p>{weitereAngebote.contact.messageIntro}</p>
+          <p>Mobil/WhatsApp/SMS: {weitereAngebote.contact.phone}</p>
+          <p>E-Mail: <a href={`mailto:${weitereAngebote.contact.email}`}>{weitereAngebote.contact.email}</a></p>
+        </div>
+      </div>
+
+      {/* Autorenbrief (Seite 13) */}
+      <div className="author-letter-section">
+        <div className="author-greeting">
+          {authorLetter.greeting.split('\n').map((line, i) => (
+            <h2 key={i}>{line}</h2>
+          ))}
+        </div>
+        {authorLetter.paragraphs.map((para, i) => (
+          <p key={i}>{para}</p>
+        ))}
+        <p className="author-signature">
+          {authorLetter.signature.split('\n').map((line, i) => (
+            <span key={i}>{line}<br /></span>
+          ))}
+        </p>
+        <div className="author-contact">
+          <p>{authorLetter.contact.intro}</p>
+          <p>Festnetz: {authorLetter.contact.festnetz}</p>
+          <p>Mobil/WhatsApp/SMS: {authorLetter.contact.mobil}</p>
+          <p>E-Mail: <a href={`mailto:${authorLetter.contact.email}`}>{authorLetter.contact.email}</a></p>
+          <p>Webseite: <a href={`https://${authorLetter.contact.website}`} target="_blank" rel="noopener noreferrer">{authorLetter.contact.website}</a></p>
+        </div>
+      </div>
+
       {/* Aktions-Buttons */}
       <div className="result-actions">
         <button className="btn-pdf" onClick={handlePDF}>
-          📄 Als PDF herunterladen
+          Als PDF herunterladen
         </button>
         <button className="btn-restart" onClick={onRestart}>
-          ↺ Test wiederholen
+          Test wiederholen
         </button>
       </div>
     </div>

@@ -374,37 +374,84 @@
   text-align: right;
 }
 
-.legend-box {
-  margin: 0 40px 20px;
-  padding: 16px 20px;
-  border: 1px solid #eee;
-  border-radius: 8px;
-  background: var(--ikobe-gray-bg);
+/* Floating Legend Help */
+.floating-legend {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 200;
 }
 
-.legend-box h4 {
-  font-size: 14px;
-  margin-bottom: 8px;
-  color: var(--ikobe-black);
-}
-
-.legend-items {
+.legend-toggle-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: none;
+  background: var(--ikobe-pink);
+  color: white;
+  font-size: 24px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(214, 51, 132, 0.4);
+  transition: all 0.3s;
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  font-size: 13px;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+}
+
+.legend-toggle-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 24px rgba(214, 51, 132, 0.5);
+}
+
+.legend-toggle-btn.open {
+  background: var(--ikobe-gray);
+}
+
+.legend-panel {
+  position: absolute;
+  bottom: 64px;
+  right: 0;
+  width: 280px;
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  border: 1px solid #eee;
+  animation: legendSlideUp 0.2s ease-out;
+}
+
+@keyframes legendSlideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.legend-panel h4 {
+  font-size: 15px;
+  margin-bottom: 14px;
+  color: var(--ikobe-pink);
+  font-weight: 700;
+}
+
+.legend-panel-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.legend-panel-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
   color: var(--ikobe-gray);
 }
 
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
 .legend-circle {
-  width: 22px;
-  height: 22px;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
   border-radius: 50%;
   background: var(--ikobe-pink);
   color: white;
@@ -412,7 +459,22 @@
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 11px;
+  font-size: 13px;
+}
+
+.legend-panel-footer {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--ikobe-gray-light);
+}
+
+.legend-scale-right {
+  text-align: right;
 }
 
 /* Navigation */
@@ -684,6 +746,164 @@
 }
 
 /* ============================
+   MOBBING INFO (Seite 11)
+   ============================ */
+.mobbing-info-section {
+  padding: 30px 40px;
+  background: linear-gradient(135deg, #fce4ec 0%, #fff 100%);
+  border-top: 3px solid var(--ikobe-pink);
+}
+
+.mobbing-info-section h2 {
+  color: var(--ikobe-pink);
+  font-size: 22px;
+  margin-bottom: 16px;
+}
+
+.mobbing-info-section p {
+  color: var(--ikobe-gray);
+  font-size: 15px;
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+
+.mobbing-info-closing {
+  margin-top: 20px;
+  font-style: italic;
+  color: var(--ikobe-black) !important;
+  font-weight: 500;
+}
+
+/* ============================
+   WEITERE ANGEBOTE (Seite 12)
+   ============================ */
+.weitere-angebote-section {
+  padding: 30px 40px;
+  background: var(--ikobe-white);
+}
+
+.weitere-angebote-section h2 {
+  color: var(--ikobe-pink);
+  font-size: 22px;
+  margin-bottom: 16px;
+}
+
+.weitere-angebote-section h3 {
+  color: var(--ikobe-black);
+  font-size: 17px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.weitere-angebote-section p {
+  color: var(--ikobe-gray);
+  font-size: 15px;
+  line-height: 1.7;
+  margin-bottom: 10px;
+}
+
+.angebote-list {
+  list-style: none;
+  padding: 0;
+}
+
+.angebote-list li {
+  padding: 4px 0 4px 20px;
+  position: relative;
+  color: var(--ikobe-gray);
+  font-size: 15px;
+}
+
+.angebote-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--ikobe-pink);
+  font-weight: 700;
+}
+
+.angebote-test-item {
+  padding: 6px 0 6px 20px;
+  position: relative;
+  font-size: 15px;
+  color: var(--ikobe-gray);
+  line-height: 1.6;
+}
+
+.angebote-test-item::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--ikobe-pink);
+  font-weight: 700;
+}
+
+.angebote-test-item strong {
+  color: var(--ikobe-black);
+}
+
+.angebote-contact {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.angebote-contact a {
+  color: var(--ikobe-pink);
+}
+
+/* ============================
+   AUTORENBRIEF (Seite 13)
+   ============================ */
+.author-letter-section {
+  padding: 30px 40px;
+  background: var(--ikobe-gray-bg);
+  border-top: 1px solid #eee;
+}
+
+.author-greeting h2 {
+  color: var(--ikobe-pink);
+  font-size: 20px;
+  margin-bottom: 4px;
+  line-height: 1.4;
+}
+
+.author-greeting h2:last-child {
+  margin-bottom: 20px;
+}
+
+.author-letter-section p {
+  color: var(--ikobe-gray);
+  font-size: 15px;
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+
+.author-signature {
+  margin-top: 24px;
+  font-style: italic;
+  color: var(--ikobe-black) !important;
+  font-weight: 600;
+}
+
+.author-contact {
+  margin-top: 24px;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.author-contact p {
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.author-contact a {
+  color: var(--ikobe-pink);
+}
+
+/* ============================
    FOOTER
    ============================ */
 .app-footer {
@@ -737,8 +957,21 @@
     padding: 16px 20px 8px;
   }
 
-  .legend-box {
-    margin: 0 20px 16px;
+  .floating-legend {
+    bottom: 16px;
+    right: 16px;
+  }
+
+  .legend-toggle-btn {
+    width: 46px;
+    height: 46px;
+    font-size: 20px;
+  }
+
+  .legend-panel {
+    width: 260px;
+    right: 0;
+    bottom: 56px;
   }
 
   .slider-label {
@@ -754,7 +987,10 @@
   .result-header,
   .result-content,
   .contacts-section,
-  .result-actions {
+  .result-actions,
+  .mobbing-info-section,
+  .weitere-angebote-section,
+  .author-letter-section {
     padding-left: 20px;
     padding-right: 20px;
   }
@@ -777,10 +1013,6 @@
 }
 
 @media (max-width: 480px) {
-  .legend-items {
-    flex-direction: column;
-  }
-
   .slider-label {
     width: 24px;
     height: 24px;

@@ -121,6 +121,77 @@ Danke für Ihre Teilnahme am Test. Wir wünschen Ihrem Kind, dass es den Turnaro
   },
 ];
 
+// Seite 11 – Linke Spalte: Allgemeine Infos zum Thema Mobbing
+export const mobbingInfoText = {
+  title: "Mobbing",
+  paragraphs: [
+    `Mobbing ist ein ernstes Thema, das Kinder und Jugendliche tiefgreifend betrifft. Es ist wichtig, zu wissen, dass Sie und die Kinder nicht allein sind. Schätzungen zufolge erlebt etwa jedes sechste Kind Mobbing in der Schule. Die Folgen können langfristig sein, sowohl für die Betroffenen als auch für die Mobber.`,
+    `Worauf kommt es also an? Drei Stichwörter werden hier genannt: Erkennung, Prävention und Intervention. Es ist entscheidend, Anzeichen von Mobbing frühzeitig zu erkennen: soziale Rückzugstendenzen, unerklärliche körperliche Beschwerden oder eine plötzliche Veränderung im Verhalten können Warnsignale sein. Der MOBBIT hilft Ihnen hier weiter, zu strukturieren und einen Überblick zu gewinnen.`,
+    `Prävention beginnt mit einem sicheren und bestärkenden Umfeld, sowohl zu Hause als auch in Bildungseinrichtungen. Kinder sollten lernen, Unterschiede zu respektieren und Empathie zu entwickeln. Konstruktive Kommunikation und soziale Kompetenzen sind Schlüsselkomponenten, die gefördert werden sollten.`,
+    `Wenn Mobbing auftritt, ist schnelles Handeln gefragt. Dies bedeutet, die Vorfälle ernst zu nehmen, mit den Kindern ins Gespräch zu kommen und ihnen zu zeigen, dass sie Unterstützung haben. Schulen sollten klare Richtlinien haben, wie mit Mobbing umzugehen ist, und auch außerschulische Unterstützung kann hilfreich sein.`,
+    `Zeigen Sie Ihren Kindern, dass ihre Stimme zählt. Ermutigen Sie sie, über ihre Erfahrungen zu sprechen und Hilfe zu suchen, wenn nötig. Gemeinsam können wir eine Gemeinschaft schaffen, die Mobbing entgegenwirkt und allen Kindern und Jugendlichen ermöglicht, sich sicher und akzeptiert zu fühlen.`,
+  ],
+  closing: `Alles Gute\nIhr IKOBE-Team`,
+};
+
+// Seite 12 – Weitere Angebote
+export const weitereAngebote = {
+  title1: "Pädagogik-Power: Kinder unterstützen bei der Talentsuche, bei Schul- und anderen wichtigen Lebensfragen",
+  buecher: {
+    title: "Bücher:",
+    items: [
+      { name: `„Talente entdecken und fördern"`, verlag: "G&U-Verlag" },
+      { name: `„Der große Begabungstest"`, verlag: "Moses-Verlag" },
+      { name: `„Förder-Guide Talente"`, verlag: "IKOBE Institut" },
+    ],
+    description: "In unseren Büchern finden Sie viele interessante und hilfreiche Infos zum Thema Talente. In jedem Buch haben wir einen Test integriert, mit dem Sie selbst testen und herausfinden können, wo bei Ihrem Kind Talente schlummern.",
+  },
+  tests1: {
+    title: "Tests:",
+    items: [
+      { name: "Talentometer", description: "Ein Fragebogen-Check für Eltern und Kinder. Systematisch begeben Sie sich hier auf eine Entdeckungsreise zu den Talenten Ihres Kindes." },
+      { name: "BegabungsCheck", description: "Wenn Sie es ganz genau wissen möchten. Mit dem Tages-Assessment BegabungsCheck erhalten Sie einen professionellen, unabhängigen und ganzheitlichen Blick auf das komplette Begabungspotenzial Ihres Kindes." },
+      { name: "Der MOBBIT", description: "Wird mein Kind gemobbt? Ein Mobbingtest zur Früherkennung." },
+      { name: "T.I.M.O.S.", description: "Der Test zur Erkennung von Internet-, Medien- und Online-Sucht" },
+    ],
+  },
+  title2: "Beratungs-Power: So helfen Sie Jugendlichen, den passenden Traumberuf zu finden",
+  tests2: {
+    title: "Tests:",
+    items: [
+      { name: "BerufsCheck", description: null },
+      { name: "KompetenzCheck", description: "Zwei Tests zur Berufs- und Studienorientierung, bewährt, professionell, aussagekräftig. Zehntausende von Schülerinnen und Schülern haben bereits von den Empfehlungen profitiert. Schulen, IHK und Stiftungen setzen die Tools erfolgreich ein, um jungen Menschen Perspektiven aufzuzeigen." },
+      { name: "CHOOSY", description: "Der Ausbildungs-Weg-Check" },
+    ],
+  },
+  contact: {
+    website: "www.ikobe.de",
+    websiteIntro: "Das und noch einiges mehr finden Sie auf unserer Internetseite",
+    messageIntro: "Wir freuen uns aber auch auf Ihre Nachricht:",
+    phone: "0049-173 / 35 90 314",
+    email: "tvk@ikobe.de",
+  },
+};
+
+// Seite 13 – Brief von Thomas von Krafft
+export const authorLetter = {
+  greeting: "Liebe Eltern,\nLiebe Erzieherinnen und Erzieher,\nLiebe Lehrerinnen und Lehrer,",
+  paragraphs: [
+    `als Diplom-Sozialpädagoge habe ich mit Hochtalentierten gearbeitet, genauso wie mit Menschen mit Einschränkungen und Behinderungen, im Förderunterricht, in der Musik, im Sport und anderen Bereichen. Gleich nach dem Studium durfte ich einige Jahre bei einem großen Bildungsträger Berufsbildung, Ausbildungsvermittlung und Integration organisieren und durchführen für Jugendliche aus unterschiedlichsten Ländern und Kulturkreisen, in der Großstadt wie auf dem Land. Bis heute bin ich Chorleiter und nehme als aktiver Sänger an verschiedensten Kulturprojekten teil. Vielseitigkeit ist bei meiner Tätigkeit wichtig. So kann ich wirklich „mitreden" und habe mein Wissen nicht nur aus Büchern, Wikipedia und „Prof. KI".`,
+    `Seit ich 1998 das youngworld-Institut gegründet habe, aus dem dann 2009 das IKOBE Institut für Kompetenz und Begabung hervorgegangen ist, entwickle ich zusammen mit ausgewiesenen Experten und Expertinnen Testverfahren zur Talentdiagnostik, Studiereignung, Berufs- und Studienorientierung, habe Hunderte Kinder und Jugendliche getestet, beraten und Gutachten erstellt, konnte verschiedenste Seminarkonzepte und Coaching-Methoden kennenlernen und teilweise auch selbst mitentwickeln. Weil ich weiß, wie wichtig das fürs ganze Leben ist!`,
+    `Diese geballte Erfahrung gebe ich an alle weiter, die selbst Kinder haben, mit Kindern oder Jugendlichen ehrenamtlich oder professionell arbeiten. Ihre wertvolle „Mission" verdient es, angemessen unterstützt zu werden, durch Werkzeuge, die Ihre Arbeit noch effizienter, hochwertiger und nachhaltiger machen, egal, ob sie Talente bei Kindern entdecken, pädagogisch beraten und tätig sind oder Jugendliche bei der Berufs- und Studienorientierung begleiten.`,
+    `Für Ihren professionellen Einsatz: Meine Motivation und mein Ziel ist es, Ihnen mit meinen Testverfahren und auch der Online-Plattform CHECKIDY ein perfektes System an die Hand zu geben, mit dem Sie alles haben, was Sie für Ihre Arbeit brauchen, und sich dadurch voll auf Ihre Aufgaben konzentrieren können.`,
+  ],
+  signature: "Ihr Thomas von Krafft\nmit IKOBE-Team",
+  contact: {
+    intro: "Mit unseren Tools und mit der CHECKIDY-Plattform zu arbeiten, ist einfacher und kostengünstiger, als Sie vielleicht denken. Rufen Sie bitte einfach an oder schreiben Sie mir:",
+    festnetz: "0049-8333 / 93 58 11",
+    mobil: "0049-173 / 35 90 314",
+    email: "tvk@ikobe.de",
+    website: "www.ikobe.de",
+  },
+};
+
 export const contactsInfo = {
   title: "Kontakte, Information",
   intro: "Ob es Handlungsbedarf gibt oder nicht, wenn Sie sich weiter informieren wollen, haben wir hier einige Links zusammengestellt.\n\nDie Quellen haben wir geprüft und für gut befunden.",

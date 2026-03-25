@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { questions, answerLabels } from '../data/questions';
 
 const QUESTIONS_PER_PAGE = 18; // Seite 1: 1-18, Seite 2: 19-35
@@ -6,6 +6,21 @@ const QUESTIONS_PER_PAGE = 18; // Seite 1: 1-18, Seite 2: 19-35
 export default function Questionnaire({ onFinish }) {
   const [answers, setAnswers] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
+  const [legendOpen, setLegendOpen] = useState(false);
+  const legendRef = useRef(null);
+
+  // Close legend when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (legendRef.current && !legendRef.current.contains(e.target)) {
+        setLegendOpen(false);
+      }
+    };
+    if (legendOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [legendOpen]);
 
   const totalPages = 2;
   const startIdx = currentPage === 0 ? 0 : 18;
@@ -59,17 +74,32 @@ export default function Questionnaire({ onFinish }) {
         Bitte alle Aussagen bewerten
       </div>
 
-      {/* Legend */}
-      <div className="legend-box">
-        <h4>Antwort-Legende</h4>
-        <div className="legend-items">
-          {answerLabels.map(item => (
-            <div key={item.value} className="legend-item">
-              <span className="legend-circle">{item.value}</span>
-              <span>{item.label}</span>
+      {/* Floating Legend Help Button */}
+      <div className="floating-legend" ref={legendRef}>
+        <button
+          className={`legend-toggle-btn ${legendOpen ? 'open' : ''}`}
+          onClick={() => setLegendOpen(!legendOpen)}
+          title="Antwort-Legende anzeigen"
+        >
+          {legendOpen ? '✕' : '?'}
+        </button>
+        {legendOpen && (
+          <div className="legend-panel">
+            <h4>Antwort-Legende</h4>
+            <div className="legend-panel-items">
+              {answerLabels.map(item => (
+                <div key={item.value} className="legend-panel-item">
+                  <span className="legend-circle">{item.value}</span>
+                  <span>{item.label}</span>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+            <div className="legend-panel-footer">
+              <span className="legend-scale-left">0 = nie / trifft gar nicht zu</span>
+              <span className="legend-scale-right">4 = fast täglich / trifft vollkommen zu</span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Questions */}
