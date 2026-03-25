@@ -125,12 +125,6 @@ export default function Questionnaire({ onFinish, savedAnswers, onProgressChange
         {pageQuestions.map(question => {
           const isAnswered = answers[question.id] !== undefined;
           const isUnanswered = !isAnswered && shakeUnanswered;
-          const specialClass = question.special === 'high'
-            ? 'special-high'
-            : question.special === 'medium'
-              ? 'special-medium'
-              : '';
-
           return (
             <div
               key={question.id}
@@ -142,9 +136,6 @@ export default function Questionnaire({ onFinish, savedAnswers, onProgressChange
               <div className="question-text">
                 <span className="question-number">
                   {question.id}.
-                  {question.special && (
-                    <span className={`special-dot ${question.special === 'high' ? 'dot-high' : 'dot-medium'}`} title="Sonderfrage (höhere Bewertung)">!</span>
-                  )}
                 </span>
                 <span id={`question-label-${question.id}`}>{question.text}</span>
               </div>
