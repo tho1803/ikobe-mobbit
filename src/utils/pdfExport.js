@@ -1,7 +1,7 @@
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { answerLabels } from '../data/questions';
-import { contactsInfo } from '../data/results';
+import { contactsInfo, mobbingInfoText, weitereAngebote, authorLetter } from '../data/results';
 
 const PINK = [214, 51, 132];
 const GRAY = [85, 85, 85];
@@ -69,6 +69,34 @@ function checkPageBreak(doc, y, needed = 30) {
   return y;
 }
 
+function addSectionTitle(doc, title, y, contentWidth) {
+  y = checkPageBreak(doc, y, 15);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(14);
+  doc.setTextColor(...PINK);
+  doc.text(title, 14, y);
+  return y + 8;
+}
+
+function addSubTitle(doc, title, y) {
+  y = checkPageBreak(doc, y, 12);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(11);
+  doc.setTextColor(...BLACK);
+  doc.text(title, 14, y);
+  return y + 7;
+}
+
+function addParagraph(doc, text, y, contentWidth) {
+  y = checkPageBreak(doc, y, 15);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(...GRAY);
+  const lines = doc.splitTextToSize(text, contentWidth);
+  doc.text(lines, 14, y);
+  return y + lines.length * 4 + 4;
+}
+
 export function generatePDF(totalScore, level, details) {
   const doc = new jsPDF('p', 'mm', 'a4');
   const pageWidth = doc.internal.pageSize.getWidth();
@@ -124,13 +152,13 @@ export function generatePDF(totalScore, level, details) {
   doc.text(`${level.range}: ${level.title}`, pageWidth / 2, boxY + 54, { align: 'center' });
 
   // Date
-  const today = new Date().toLocaleDateString('de-DE', {
+  const todayStr = new Date().toLocaleDateString('de-DE', {
     day: '2-digit', month: '2-digit', year: 'numeric'
   });
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(9);
   doc.setTextColor(150, 150, 150);
-  doc.text(`Erstellt am: ${today}`, pageWidth / 2, boxY + 70, { align: 'center' });
+  doc.text(`Erstellt am: ${todayStr}`, pageWidth / 2, boxY + 70, { align: 'center' });
 
   addFooter(doc, pageNum);
 
@@ -186,14 +214,12 @@ export function generatePDF(totalScore, level, details) {
       3: { cellWidth: 15, halign: 'center' },
     },
     didParseCell: function(data) {
-      // Highlight bonus rows
       if (data.section === 'body' && data.row.index < details.length) {
         const detail = details[data.row.index];
         if (detail && detail.bonus) {
           data.cell.styles.fillColor = detail.bonusType === 'high' ? [255, 240, 240] : [255, 248, 225];
         }
       }
-      // Total row
       if (data.section === 'body' && data.row.index === details.length) {
         data.cell.styles.fillColor = [245, 245, 245];
         data.cell.styles.fontStyle = 'bold';
@@ -224,30 +250,17 @@ export function generatePDF(totalScore, level, details) {
   y += 12;
 
   // Description
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(9);
-  doc.setTextColor(...GRAY);
-
   const descParagraphs = level.description.split('\n\n');
   for (const para of descParagraphs) {
-    y = checkPageBreak(doc, y, 20);
-    const lines = doc.splitTextToSize(para, contentWidth);
-    doc.text(lines, 14, y);
-    y += lines.length * 4 + 4;
+    y = addParagraph(doc, para, y, contentWidth);
   }
 
   // Parent advice
   if (level.parentAdvice) {
-    y = checkPageBreak(doc, y, 15);
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(...BLACK);
-    doc.text('Was Sie tun können und sollten:', 14, y);
-    y += 7;
+    y = addSubTitle(doc, 'Was Sie tun können und sollten:', y);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
     doc.setTextColor(...GRAY);
-
     level.parentAdvice.forEach((item, i) => {
       y = checkPageBreak(doc, y, 15);
       const lines = doc.splitTextToSize(`${i + 1}. ${item}`, contentWidth - 5);
@@ -258,16 +271,10 @@ export function generatePDF(totalScore, level, details) {
 
   // Child advice
   if (level.childAdvice) {
-    y = checkPageBreak(doc, y, 15);
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(...BLACK);
-    doc.text('Ihr Kind sollte ...', 14, y);
-    y += 7;
+    y = addSubTitle(doc, 'Ihr Kind sollte ...', y);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
     doc.setTextColor(...GRAY);
-
     level.childAdvice.forEach((item) => {
       y = checkPageBreak(doc, y, 12);
       const lines = doc.splitTextToSize(`... ${item}`, contentWidth - 5);
@@ -278,16 +285,10 @@ export function generatePDF(totalScore, level, details) {
 
   // Don't do
   if (level.dontDo) {
-    y = checkPageBreak(doc, y, 15);
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.setTextColor(...BLACK);
-    doc.text('Was nicht weiterhilft:', 14, y);
-    y += 7;
+    y = addSubTitle(doc, 'Was nicht weiterhilft:', y);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
     doc.setTextColor(...GRAY);
-
     level.dontDo.forEach((item, i) => {
       y = checkPageBreak(doc, y, 12);
       const lines = doc.splitTextToSize(`${i + 1}. ${item}`, contentWidth - 5);
@@ -301,39 +302,23 @@ export function generatePDF(totalScore, level, details) {
     y += 4;
     const closingParagraphs = level.closingText.split('\n\n');
     for (const para of closingParagraphs) {
-      y = checkPageBreak(doc, y, 15);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9);
-      doc.setTextColor(...GRAY);
-      const lines = doc.splitTextToSize(para, contentWidth);
-      doc.text(lines, 14, y);
-      y += lines.length * 4 + 4;
+      y = addParagraph(doc, para, y, contentWidth);
     }
   }
 
-  // === Contacts Page ===
+  // === Contacts Section ===
   y = checkPageBreak(doc, y, 60);
   y += 6;
+  y = addSectionTitle(doc, 'Kontakte, Information', y, contentWidth);
 
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(14);
-  doc.setTextColor(...PINK);
-  doc.text('Kontakte, Information', 14, y);
-  y += 8;
-
+  const introLines = doc.splitTextToSize(contactsInfo.intro, contentWidth);
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(9);
   doc.setTextColor(...GRAY);
-  const introLines = doc.splitTextToSize(contactsInfo.intro, contentWidth);
   doc.text(introLines, 14, y);
   y += introLines.length * 4 + 6;
 
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(10);
-  doc.setTextColor(...BLACK);
-  doc.text('Hilfe + Beratung:', 14, y);
-  y += 6;
-
+  y = addSubTitle(doc, 'Hilfe + Beratung:', y);
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(9);
   contactsInfo.helpLinks.forEach(link => {
@@ -349,12 +334,7 @@ export function generatePDF(totalScore, level, details) {
   });
 
   y += 4;
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(10);
-  doc.setTextColor(...BLACK);
-  doc.text('Wissen + Info:', 14, y);
-  y += 6;
-
+  y = addSubTitle(doc, 'Wissen + Info:', y);
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(9);
   contactsInfo.infoLinks.forEach(link => {
@@ -363,6 +343,124 @@ export function generatePDF(totalScore, level, details) {
     doc.textWithLink(link.label, 14, y, { url: link.url });
     y += 5;
   });
+
+  // === Mobbing Info (Seite 11) ===
+  doc.addPage();
+  y = addHeader(doc);
+  y = addSectionTitle(doc, mobbingInfoText.title, y, contentWidth);
+
+  for (const para of mobbingInfoText.paragraphs) {
+    y = addParagraph(doc, para, y, contentWidth);
+  }
+
+  y = checkPageBreak(doc, y, 12);
+  doc.setFont('helvetica', 'italic');
+  doc.setFontSize(9);
+  doc.setTextColor(...BLACK);
+  const closingLines = mobbingInfoText.closing.split('\n');
+  closingLines.forEach(line => {
+    doc.text(line, 14, y);
+    y += 5;
+  });
+
+  // === Weitere Angebote (Seite 12) ===
+  y += 8;
+  y = checkPageBreak(doc, y, 40);
+  y = addSectionTitle(doc, weitereAngebote.title1, y, contentWidth);
+
+  y = addSubTitle(doc, weitereAngebote.buecher.title, y);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(...GRAY);
+  weitereAngebote.buecher.items.forEach(b => {
+    y = checkPageBreak(doc, y, 8);
+    doc.text(`✓  ${b.name}, ${b.verlag}`, 16, y);
+    y += 5;
+  });
+  y += 2;
+  y = addParagraph(doc, weitereAngebote.buecher.description, y, contentWidth);
+
+  y = addSubTitle(doc, weitereAngebote.tests1.title, y);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(...GRAY);
+  weitereAngebote.tests1.items.forEach(t => {
+    y = checkPageBreak(doc, y, 12);
+    const text = t.description ? `✓  ${t.name} – ${t.description}` : `✓  ${t.name}`;
+    const lines = doc.splitTextToSize(text, contentWidth - 5);
+    doc.text(lines, 16, y);
+    y += lines.length * 4 + 2;
+  });
+
+  y += 6;
+  y = checkPageBreak(doc, y, 30);
+  y = addSectionTitle(doc, weitereAngebote.title2, y, contentWidth);
+  y = addSubTitle(doc, weitereAngebote.tests2.title, y);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(...GRAY);
+  weitereAngebote.tests2.items.forEach(t => {
+    y = checkPageBreak(doc, y, 12);
+    const text = t.description ? `✓  ${t.name} – ${t.description}` : `✓  ${t.name}`;
+    const lines = doc.splitTextToSize(text, contentWidth - 5);
+    doc.text(lines, 16, y);
+    y += lines.length * 4 + 2;
+  });
+
+  y += 6;
+  y = checkPageBreak(doc, y, 20);
+  doc.setDrawColor(230, 230, 230);
+  doc.line(14, y, pageWidth - 14, y);
+  y += 6;
+  y = addParagraph(doc, `${weitereAngebote.contact.websiteIntro} ${weitereAngebote.contact.website}`, y, contentWidth);
+  y = addParagraph(doc, weitereAngebote.contact.messageIntro, y, contentWidth);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(...GRAY);
+  doc.text(`Mobil/WhatsApp/SMS: ${weitereAngebote.contact.phone}`, 14, y);
+  y += 5;
+  doc.text(`E-Mail: ${weitereAngebote.contact.email}`, 14, y);
+  y += 8;
+
+  // === Autorenbrief (Seite 13) ===
+  doc.addPage();
+  y = addHeader(doc);
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(14);
+  doc.setTextColor(...PINK);
+  const greetingLines = authorLetter.greeting.split('\n');
+  greetingLines.forEach(line => {
+    doc.text(line, 14, y);
+    y += 7;
+  });
+  y += 4;
+
+  for (const para of authorLetter.paragraphs) {
+    y = addParagraph(doc, para, y, contentWidth);
+  }
+
+  y += 4;
+  y = checkPageBreak(doc, y, 20);
+  doc.setFont('helvetica', 'italic');
+  doc.setFontSize(10);
+  doc.setTextColor(...BLACK);
+  const sigLines = authorLetter.signature.split('\n');
+  sigLines.forEach(line => {
+    doc.text(line, 14, y);
+    y += 6;
+  });
+
+  y += 8;
+  y = checkPageBreak(doc, y, 30);
+  y = addParagraph(doc, authorLetter.contact.intro, y, contentWidth);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(...GRAY);
+  doc.text(`Festnetz: ${authorLetter.contact.festnetz}`, 14, y); y += 5;
+  doc.text(`Mobil/WhatsApp/SMS: ${authorLetter.contact.mobil}`, 14, y); y += 5;
+  doc.text(`E-Mail: ${authorLetter.contact.email}`, 14, y); y += 5;
+  doc.text(`Webseite: ${authorLetter.contact.website}`, 14, y); y += 5;
 
   // Add footer to all pages
   const totalPages = doc.internal.getNumberOfPages();

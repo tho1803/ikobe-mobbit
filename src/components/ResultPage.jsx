@@ -3,6 +3,7 @@ import { calculateScore, getResultLevel } from '../utils/scoring';
 import { resultLevels, contactsInfo, mobbingInfoText, weitereAngebote, authorLetter } from '../data/results';
 import { answerLabels } from '../data/questions';
 import { generatePDF } from '../utils/pdfExport';
+import ScoreGauge from './ScoreGauge';
 
 const stufeColors = ['#4caf50', '#ff9800', '#f44336', '#9c27b0'];
 
@@ -23,13 +24,7 @@ export default function ResultPage({ answers, onRestart }) {
           Zählen Sie jetzt alle Punkte zusammen. Bei 35 Fragen und der Legende von 0 bis 4
           ergibt sich eine Spanne von 0 (35 x 0) bis 140 (35 x 4).
         </p>
-        <div className="result-score">
-          <span className="score-number">{totalScore}</span>
-          <span className="score-label">
-            Gesamt-<br />punktzahl
-          </span>
-        </div>
-        <br />
+        <ScoreGauge score={totalScore} />
         <div className="result-level-badge" style={{ background: stufeColors[level.id - 1] }}>
           {level.range}: {level.title}
         </div>

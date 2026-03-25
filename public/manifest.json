@@ -1,0 +1,23 @@
+{
+  "name": "IKOBE MOBBIT – Mobbing frühzeitig erkennen",
+  "short_name": "MOBBIT",
+  "description": "Strukturierter Fragebogen-Test zum Thema: Wird mein Kind gemobbt?",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#d63384",
+  "orientation": "portrait-primary",
+  "lang": "de",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
