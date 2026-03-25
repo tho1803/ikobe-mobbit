@@ -91,17 +91,37 @@ export default function Questionnaire({ onFinish }) {
                 <span className="question-number">{question.id}.</span>
                 <span>{question.text}</span>
               </div>
-              <div className="answer-options">
-                {answerLabels.map(option => (
-                  <button
-                    key={option.value}
-                    className={`answer-btn ${answers[question.id] === option.value ? 'selected' : ''}`}
-                    onClick={() => handleAnswer(question.id, option.value)}
-                  >
-                    <span className="answer-circle">{option.value}</span>
-                    <span className="answer-label">{option.label}</span>
-                  </button>
-                ))}
+              <div className="slider-container">
+                <div className="slider-labels">
+                  {answerLabels.map(option => (
+                    <span
+                      key={option.value}
+                      className={`slider-label ${answers[question.id] === option.value ? 'active' : ''}`}
+                    >
+                      {option.value}
+                    </span>
+                  ))}
+                </div>
+                <div className="slider-track-wrapper">
+                  <input
+                    type="range"
+                    min="0"
+                    max="4"
+                    step="1"
+                    value={answers[question.id] ?? -1}
+                    className={`slider-input ${answers[question.id] !== undefined ? 'has-value' : ''}`}
+                    onChange={(e) => handleAnswer(question.id, parseInt(e.target.value))}
+                    style={{
+                      '--slider-percent': answers[question.id] !== undefined
+                        ? `${(answers[question.id] / 4) * 100}%`
+                        : '0%'
+                    }}
+                  />
+                </div>
+                <div className="slider-descriptions">
+                  <span className="slider-desc-left">nie / trifft gar nicht zu</span>
+                  <span className="slider-desc-right">fast täglich / trifft vollkommen zu</span>
+                </div>
               </div>
             </div>
           );
