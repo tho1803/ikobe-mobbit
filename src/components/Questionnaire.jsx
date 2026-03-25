@@ -6,9 +6,7 @@ const QUESTIONS_PER_PAGE = 18; // Seite 1: 1-18, Seite 2: 19-35
 export default function Questionnaire({ onFinish, savedAnswers, onProgressChange }) {
   const [answers, setAnswers] = useState(savedAnswers || {});
   const [currentPage, setCurrentPage] = useState(0);
-  const [legendOpen, setLegendOpen] = useState(false);
   const [shakeUnanswered, setShakeUnanswered] = useState(false);
-  const legendRef = useRef(null);
   const questionRefs = useRef({});
 
   // Restore saved page from sessionStorage
@@ -23,19 +21,6 @@ export default function Questionnaire({ onFinish, savedAnswers, onProgressChange
       }
     } catch (e) { /* */ }
   }, []);
-
-  // Close legend when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (legendRef.current && !legendRef.current.contains(e.target)) {
-        setLegendOpen(false);
-      }
-    };
-    if (legendOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [legendOpen]);
 
   const totalPages = 2;
   const startIdx = currentPage === 0 ? 0 : 18;
@@ -63,7 +48,6 @@ export default function Questionnaire({ onFinish, savedAnswers, onProgressChange
         behavior: 'smooth',
         block: 'center',
       });
-      // Shake animation
       setShakeUnanswered(true);
       setTimeout(() => setShakeUnanswered(false), 800);
     }
@@ -91,7 +75,6 @@ export default function Questionnaire({ onFinish, savedAnswers, onProgressChange
 
   const handleSubmit = () => {
     if (!allAnswered) {
-      // Go to page with unanswered questions
       const firstUnansweredQ = questions.find(q => answers[q.id] === undefined);
       if (firstUnansweredQ) {
         const targetPage = firstUnansweredQ.id <= 18 ? 0 : 1;
@@ -109,49 +92,32 @@ export default function Questionnaire({ onFinish, savedAnswers, onProgressChange
 
   return (
     <div className="questionnaire">
-      {/* Progress */}
-      <div className="progress-section">
-        <div className="progress-info">
-          <span>Fragebogen Seite {currentPage + 1} von {totalPages}</span>
-          <span>{answeredCount} von {questions.length} beantwortet</span>
+      {/* Sticky top bar: Progress + Legend */}
+      <div className="sticky-top-bar">
+        {/* Progress */}
+        <div className="progress-section">
+          <div className="progress-info">
+            <span>Seite {currentPage + 1} / {totalPages}</span>
+            <span>{answeredCount} von {questions.length} beantwortet</span>
+          </div>
+          <div className="progress-bar-container">
+            <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
+          </div>
         </div>
-        <div className="progress-bar-container">
-          <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
+
+        {/* Compact Legend Strip */}
+        <div className="legend-strip" role="group" aria-label="Antwort-Legende">
+          {answerLabels.map(item => (
+            <div key={item.value} className="legend-strip-item">
+              <span className="legend-strip-circle">{item.value}</span>
+              <span className="legend-strip-label">{item.label}</span>
+            </div>
+          ))}
         </div>
       </div>
 
       <div className="question-page-header">
         Bitte alle Aussagen bewerten
-      </div>
-
-      {/* Floating Legend Help Button */}
-      <div className="floating-legend" ref={legendRef}>
-        <button
-          className={`legend-toggle-btn ${legendOpen ? 'open' : ''}`}
-          onClick={() => setLegendOpen(!legendOpen)}
-          title="Antwort-Legende anzeigen"
-          aria-label="Antwort-Legende öffnen"
-          aria-expanded={legendOpen}
-        >
-          {legendOpen ? '✕' : '?'}
-        </button>
-        {legendOpen && (
-          <div className="legend-panel" role="tooltip" aria-label="Antwort-Legende">
-            <h4>Antwort-Legende</h4>
-            <div className="legend-panel-items">
-              {answerLabels.map(item => (
-                <div key={item.value} className="legend-panel-item">
-                  <span className="legend-circle" aria-hidden="true">{item.value}</span>
-                  <span>{item.label}</span>
-                </div>
-              ))}
-            </div>
-            <div className="legend-panel-footer">
-              <span className="legend-scale-left">0 = nie / trifft gar nicht zu</span>
-              <span className="legend-scale-right">4 = fast täglich / trifft vollkommen zu</span>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Questions */}
