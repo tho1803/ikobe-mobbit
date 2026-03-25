@@ -1,0 +1,71 @@
+:root {
+  /* IKOBE Farben */
+  --ikobe-pink: #d63384;
+  --ikobe-pink-light: #f0c0d8;
+  --ikobe-pink-bg: #fdf2f7;
+  --ikobe-gray: #555555;
+  --ikobe-gray-light: #888888;
+  --ikobe-gray-bg: #f5f5f5;
+  --ikobe-white: #ffffff;
+  --ikobe-black: #333333;
+
+  /* Bunte Balken des Logos */
+  --ikobe-bar-1: #8bc34a; /* grün */
+  --ikobe-bar-2: #ff9800; /* orange */
+  --ikobe-bar-3: #e91e63; /* pink */
+  --ikobe-bar-4: #2196f3; /* blau */
+  --ikobe-bar-5: #9c27b0; /* lila */
+
+  /* Antwort-Farben */
+  --answer-0: #e0e0e0;
+  --answer-1: #a8d8ea;
+  --answer-2: #f9e79f;
+  --answer-3: #f5b041;
+  --answer-4: #e74c3c;
+
+  /* Stufen-Farben */
+  --stufe-1: #4caf50;
+  --stufe-2: #ff9800;
+  --stufe-3: #f44336;
+  --stufe-4: #9c27b0;
+
+  font-family: 'Open Sans', system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ikobe-black);
+  background: var(--ikobe-white);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--ikobe-gray-bg);
+}
+
+#root {
+  max-width: 900px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--ikobe-white);
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.08);
+}
+
+h1, h2, h3, h4 {
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+a {
+  color: var(--ikobe-pink);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
