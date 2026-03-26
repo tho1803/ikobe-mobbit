@@ -73,8 +73,8 @@ function addFooter(doc, pageNum) {
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8);
   doc.setTextColor(150, 150, 150);
-  doc.text(s('Der MOBBIT - Mobbing fruehzeitig erkennen'), 14, pageHeight - 12);
-  doc.text(s('(c) Copyright - Alle Rechte bei IKOBE'), pageWidth / 2, pageHeight - 12, { align: 'center' });
+  doc.text('Der MOBBIT - Mobbing fruehzeitig erkennen', 14, pageHeight - 12);
+  doc.text('(c) Copyright - Alle Rechte bei IKOBE', pageWidth / 2, pageHeight - 12, { align: 'center' });
   doc.text(`Seite ${pageNum}`, pageWidth - 14, pageHeight - 12, { align: 'right' });
 }
 
@@ -117,6 +117,7 @@ function addParagraph(doc, text, y, contentWidth) {
 }
 
 export function generatePDF(totalScore, level, details) {
+  try {
   const doc = new jsPDF('p', 'mm', 'a4');
   const pageWidth = doc.internal.pageSize.getWidth();
   const contentWidth = pageWidth - 28;
@@ -129,11 +130,11 @@ export function generatePDF(totalScore, level, details) {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(10);
   doc.setTextColor(...BLACK);
-  doc.text('Pädagogik-Power', pageWidth / 2, y + 5, { align: 'center' });
+  doc.text(s('Pädagogik-Power'), pageWidth / 2, y + 5, { align: 'center' });
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(9);
-  doc.text('für Eltern von schulpflichtigen Kindern', pageWidth / 2, y + 12, { align: 'center' });
-  doc.text('für Lehrkräfte und pädagogisches Personal', pageWidth / 2, y + 18, { align: 'center' });
+  doc.text(s('für Eltern von schulpflichtigen Kindern'), pageWidth / 2, y + 12, { align: 'center' });
+  doc.text(s('für Lehrkräfte und pädagogisches Personal'), pageWidth / 2, y + 18, { align: 'center' });
 
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(28);
@@ -141,7 +142,7 @@ export function generatePDF(totalScore, level, details) {
 
   doc.setTextColor(...PINK);
   doc.setFontSize(16);
-  doc.text('Mobbing frühzeitig erkennen', pageWidth / 2, y + 50, { align: 'center' });
+  doc.text(s('Mobbing frühzeitig erkennen'), pageWidth / 2, y + 50, { align: 'center' });
 
   doc.setTextColor(...GRAY);
   doc.setFont('helvetica', 'normal');
@@ -330,7 +331,7 @@ export function generatePDF(totalScore, level, details) {
   y += 6;
   y = addSectionTitle(doc, 'Kontakte, Information', y, contentWidth);
 
-  const introLines = doc.splitTextToSize(contactsInfo.intro, contentWidth);
+  const introLines = doc.splitTextToSize(s(contactsInfo.intro), contentWidth);
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(9);
   doc.setTextColor(...GRAY);
@@ -490,6 +491,10 @@ export function generatePDF(totalScore, level, details) {
 
   // Save
   doc.save(`MOBBIT_Auswertung_${today()}.pdf`);
+  } catch (error) {
+    console.error('PDF-Generierung fehlgeschlagen:', error);
+    alert(`PDF konnte nicht erstellt werden: ${error.message}`);
+  }
 }
 
 function today() {

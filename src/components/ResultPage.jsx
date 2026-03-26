@@ -12,7 +12,17 @@ export default function ResultPage({ answers, onRestart }) {
   const level = useMemo(() => getResultLevel(totalScore), [totalScore]);
 
   const handlePDF = () => {
-    generatePDF(totalScore, level, details);
+    console.log('PDF-Button geklickt, starte Generierung...', { totalScore, level: level?.title, detailsCount: details?.length });
+    try {
+      generatePDF(totalScore, level, details);
+    } catch (err) {
+      console.error('PDF-Fehler:', err);
+      alert('PDF konnte nicht erstellt werden: ' + err.message);
+    }
+  };
+
+  const handleTermin = () => {
+    window.open('https://app.usemotion.com/meet/Thomas/onlinetermin?d=30', '_blank');
   };
 
   return (
@@ -42,6 +52,16 @@ export default function ResultPage({ answers, onRestart }) {
             <div className="stufe-title">{l.title}</div>
           </div>
         ))}
+      </div>
+
+      {/* Aktions-Buttons direkt unter der Auswertung */}
+      <div className="result-actions">
+        <button className="btn-pdf" onClick={handlePDF}>
+          Als PDF herunterladen
+        </button>
+        <button className="btn-termin" onClick={handleTermin}>
+          Terminvereinbarung für ein kostenloses telefonisches Erstgespräch
+        </button>
       </div>
 
       {/* Ergebnis-Text */}
@@ -266,15 +286,6 @@ export default function ResultPage({ answers, onRestart }) {
         </div>
       </div>
 
-      {/* Aktions-Buttons */}
-      <div className="result-actions">
-        <button className="btn-pdf" onClick={handlePDF}>
-          Als PDF herunterladen
-        </button>
-        <button className="btn-restart" onClick={onRestart}>
-          Test wiederholen
-        </button>
-      </div>
     </div>
   );
 }
