@@ -92,13 +92,29 @@ export default function Questionnaire({ onFinish, savedAnswers, onProgressChange
 
   return (
     <div className="questionnaire">
-      {/* Sticky top bar: Progress + Legend */}
+      {/* Sticky top bar: Progress + Legend + Restart */}
       <div className="sticky-top-bar">
-        {/* Progress */}
+        {/* Progress + Restart */}
         <div className="progress-section">
           <div className="progress-info">
             <span>Seite {currentPage + 1} / {totalPages}</span>
             <span>{answeredCount} von {questions.length} beantwortet</span>
+            <button
+              className="restart-btn-sticky"
+              onClick={() => {
+                if (window.confirm('Test wirklich neu starten? Alle Antworten werden gelöscht.')) {
+                  sessionStorage.removeItem('mobbit-progress');
+                  setAnswers({});
+                  setCurrentPage(0);
+                  if (onProgressChange) onProgressChange({}, 0);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }}
+              aria-label="Test neu starten"
+              title="Test neu starten"
+            >
+              ↺ Neustart
+            </button>
           </div>
           <div className="progress-bar-container">
             <div className="progress-bar-fill" style={{ width: `${progress}%` }} />

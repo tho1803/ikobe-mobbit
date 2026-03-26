@@ -207,6 +207,25 @@
   margin-bottom: 6px;
   font-size: 13px;
   color: var(--ikobe-gray);
+  gap: 8px;
+}
+
+.restart-btn-sticky {
+  background: none;
+  border: 1.5px solid var(--ikobe-pink);
+  color: var(--ikobe-pink);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s, color 0.2s;
+}
+
+.restart-btn-sticky:hover {
+  background: var(--ikobe-pink);
+  color: #fff;
 }
 
 .progress-bar-container {
