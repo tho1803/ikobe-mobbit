@@ -1,5 +1,6 @@
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import { applyPlugin } from 'jspdf-autotable';
+applyPlugin(jsPDF);
 import { answerLabels } from '../data/questions';
 import { contactsInfo, mobbingInfoText, weitereAngebote, authorLetter } from '../data/results';
 
