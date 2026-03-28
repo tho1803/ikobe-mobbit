@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHOOSY – Der Ausbildungs-Weg-Check | IKOBE</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ikobe-pink: #d63384;
+  --ikobe-pink-light: #f0c0d8;
+  --ikobe-pink-bg: #fdf2f7;
+  --ikobe-gray: #555555;
+  --ikobe-gray-light: #888888;
+  --ikobe-gray-bg: #f5f5f5;
+  --ikobe-white: #ffffff;
+  --ikobe-black: #333333;
+  --ikobe-bar-1: #f48fb1;
+  --ikobe-bar-2: #8bc34a;
+  --ikobe-bar-3: #9c27b0;
+  --ikobe-bar-4: #ffb74d;
+  --ikobe-bar-5: #29b6f6;
+  --ikobe-bar-6: #4db6ac;
+  --choosy-accent: #03a9f4;
+  --choosy-accent-dark: #0288d1;
+  --choosy-accent-light: #e1f5fe;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Open Sans',system-ui,-apple-system,sans-serif; font-size:16px; line-height:1.6; color:var(--ikobe-gray); background:var(--ikobe-gray-bg); }
+.app-container { max-width:900px; margin:0 auto; background:var(--ikobe-white); min-height:100vh; box-shadow:0 0 40px rgba(0,0,0,0.08); }
+.app-header { position:sticky; top:0; z-index:100; display:flex; justify-content:space-between; align-items:center; padding:12px 32px; background:var(--ikobe-white); border-bottom:1px solid #eee; }
+.ikobe-logo { display:flex; align-items:center; }
+.logo-img { height:36px; width:auto; }
+.header-url { color:var(--ikobe-gray-light); font-size:13px; }
+.content { padding:30px 40px; }
+@media(max-width:600px){.content{padding:20px;}}
+.page { animation:fadeIn 0.4s ease; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+/* Hero */
+.hero { text-align:center; padding:40px 20px; }
+.hero-badge { display:inline-block; background:var(--choosy-accent-light); color:var(--choosy-accent-dark); padding:6px 18px; border-radius:20px; font-size:13px; font-weight:600; margin-bottom:20px; }
+.hero h1 { font-size:32px; font-weight:700; color:var(--ikobe-black); margin-bottom:4px; line-height:1.2; }
+.hero h1 span { color:var(--choosy-accent); }
+.hero .subtitle { font-size:18px; color:var(--choosy-accent); font-weight:600; margin-bottom:16px; }
+.hero .tagline { color:var(--ikobe-gray); font-size:15px; margin-bottom:24px; max-width:560px; margin-left:auto; margin-right:auto; }
+.hero-arrows { display:flex; justify-content:center; gap:24px; margin:28px 0; flex-wrap:wrap; }
+.hero-path { background:var(--ikobe-white); border:2px solid #eee; border-radius:16px; padding:20px 16px; width:160px; text-align:center; transition:all 0.3s; }
+.hero-path:hover { border-color:var(--choosy-accent); transform:translateY(-4px); box-shadow:0 8px 24px rgba(3,169,244,0.15); }
+.hero-path .path-icon { font-size:36px; margin-bottom:8px; }
+.hero-path .path-label { font-weight:600; color:var(--ikobe-black); font-size:14px; }
+.meta-info { display:flex; justify-content:center; gap:24px; margin:24px 0; font-size:14px; color:var(--ikobe-gray-light); }
+.meta-info span { display:flex; align-items:center; gap:6px; }
+.intro-text { text-align:left; max-width:700px; margin:20px auto 0; font-size:14px; color:var(--ikobe-gray); line-height:1.7; }
+.intro-text p { margin-bottom:12px; }
+.intro-text strong { color:var(--ikobe-black); }
+
+/* Buttons */
+.btn-primary { background:var(--ikobe-pink); color:white; border:none; padding:14px 40px; font-size:16px; font-weight:600; border-radius:8px; cursor:pointer; transition:all 0.3s; font-family:inherit; }
+.btn-primary:hover { background:#b82870; transform:translateY(-2px); box-shadow:0 6px 20px rgba(214,51,132,0.3); }
+.btn-secondary { background:white; color:var(--ikobe-pink); border:2px solid var(--ikobe-pink); padding:14px 32px; font-size:16px; font-weight:600; border-radius:8px; cursor:pointer; transition:all 0.3s; font-family:inherit; }
+.btn-secondary:hover { background:var(--ikobe-pink-bg); }
+
+/* Fields grid */
+.fields-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:24px 0; }
+@media(max-width:600px){.fields-grid{grid-template-columns:1fr;}}
+.field-card { background:white; border-radius:12px; padding:20px; border:1px solid #eee; transition:transform 0.2s,box-shadow 0.2s; }
+.field-card:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,0.08); }
+.field-card .card-icon { font-size:28px; margin-bottom:8px; }
+.field-card .card-number { font-size:12px; color:var(--choosy-accent); font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+.field-card .card-title { font-weight:700; color:var(--ikobe-black); font-size:16px; margin:4px 0; }
+.field-card .card-desc { font-size:13px; color:var(--ikobe-gray); line-height:1.6; }
+
+/* Progress */
+.progress-container { background:#eee; border-radius:10px; height:8px; margin:20px 0 8px; overflow:hidden; }
+.progress-bar { height:100%; background:linear-gradient(90deg,var(--ikobe-pink),#b82870); border-radius:10px; transition:width 0.5s ease; }
+.progress-label { display:flex; justify-content:space-between; font-size:13px; color:var(--ikobe-gray-light); margin-bottom:24px; }
+
+/* Sticky test header */
+.test-sticky-header {
+  position:sticky; top:60px; z-index:50; background:var(--ikobe-white);
+  padding:16px 0 0; margin:0 -40px; padding-left:40px; padding-right:40px;
+  border-bottom:1px solid #eee;
+}
+@media(max-width:600px){.test-sticky-header{margin:0 -20px;padding-left:20px;padding-right:20px;top:56px;}}
+
+/* Questions */
+.question-header { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+.field-badge { background:var(--choosy-accent-light); color:var(--choosy-accent-dark); padding:4px 14px; border-radius:20px; font-size:13px; font-weight:600; }
+.section-title { color:var(--choosy-accent); font-size:22px; font-weight:700; margin-bottom:8px; }
+
+/* Question items – vertical layout with slider */
+.question-item { padding:20px 0; border-bottom:1px solid #f0f0f0; }
+.question-item:last-child { border-bottom:none; }
+.question-text { font-size:15px; color:var(--ikobe-black); line-height:1.5; margin-bottom:12px; }
+
+/* Slider (MOBBIT-style) */
+.slider-container { padding:0 4px; }
+.slider-labels { display:flex; justify-content:space-between; padding:0; margin-bottom:6px; gap:4px; }
+.slider-label {
+  width:36px; height:36px; border-radius:50%; border:2px solid #e0e0e0;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:700; font-size:14px; color:var(--ikobe-gray-light);
+  background:var(--ikobe-white); cursor:pointer; transition:all 0.2s ease;
+  font-family:inherit; padding:0;
+}
+.slider-label:hover { border-color:var(--choosy-accent); background:var(--choosy-accent-light); color:var(--choosy-accent-dark); }
+.slider-label.active {
+  background:var(--choosy-accent); color:white; border-color:var(--choosy-accent);
+  transform:scale(1.15); box-shadow:0 2px 8px rgba(3,169,244,0.35);
+}
+.slider-track-wrapper { position:relative; padding:12px 0; cursor:pointer; }
+.slider-track {
+  width:100%; height:6px; border-radius:3px; background:#e0e0e0;
+  position:relative; opacity:0.4; transition:opacity 0.3s;
+}
+.slider-track.has-value {
+  opacity:1;
+  background:linear-gradient(to right,
+    var(--choosy-accent) 0%,
+    var(--choosy-accent) var(--slider-percent,0%),
+    #e0e0e0 var(--slider-percent,0%),
+    #e0e0e0 100%);
+}
+.slider-thumb {
+  position:absolute; top:50%; width:22px; height:22px; border-radius:50%;
+  background:var(--choosy-accent); border:3px solid white;
+  box-shadow:0 2px 6px rgba(0,0,0,0.2); transform:translate(-50%,-50%);
+  transition:left 0.15s ease; pointer-events:none;
+}
+.slider-descriptions { display:flex; justify-content:space-between; margin-top:4px; font-size:11px; color:var(--ikobe-gray-light); }
+.slider-desc-left,.slider-desc-right { max-width:45%; }
+.slider-desc-right { text-align:right; }
+
+.scale-legend-compact {
+  display:flex; justify-content:space-between; gap:4px; margin-top:8px; padding:6px 0 8px;
+  font-size:11px; color:var(--ikobe-gray-light);
+}
+.scale-legend-compact span { text-align:center; }
+.scale-legend-compact b { color:var(--choosy-accent); font-weight:700; margin-right:2px; }
+@media(max-width:600px){.scale-legend-compact{font-size:10px;gap:2px;}}
+
+.nav-buttons { display:flex; justify-content:space-between; margin-top:32px; padding-top:20px; border-top:1px solid #eee; }
+
+/* Results */
+.result-banner { text-align:center; padding:32px 20px; background:linear-gradient(135deg,var(--choosy-accent-light),#e8f5e9); border-radius:16px; margin-bottom:28px; }
+.result-banner h2 { color:var(--ikobe-black); font-size:24px; margin-bottom:8px; }
+.result-banner .best-path { font-size:28px; font-weight:700; color:var(--choosy-accent-dark); }
+.result-banner .best-path-icon { font-size:48px; margin-bottom:8px; display:block; }
+.result-banner .diff-info { font-size:14px; color:var(--ikobe-gray-light); margin-top:8px; }
+.result-cards { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin:24px 0; }
+@media(max-width:600px){.result-cards{grid-template-columns:1fr;}}
+.result-card { border-radius:12px; padding:20px; text-align:center; border:2px solid #eee; transition:all 0.3s; }
+.result-card.winner { border-color:var(--choosy-accent); background:var(--choosy-accent-light); }
+.result-card .card-rank { font-size:32px; margin-bottom:4px; }
+.result-card .card-path-name { font-weight:700; color:var(--ikobe-black); font-size:15px; margin-bottom:4px; }
+.result-card .card-diff { font-size:24px; font-weight:700; }
+.result-card .card-diff-label { font-size:12px; color:var(--ikobe-gray-light); }
+.chart-container { margin:28px auto; max-width:500px; }
+.chart-container canvas { width:100%!important; height:auto!important; }
+.field-scores { margin:24px 0; }
+.score-row { display:flex; align-items:center; padding:10px 0; border-bottom:1px solid #f0f0f0; }
+.score-row:last-child { border-bottom:none; }
+.score-label { flex:1; font-size:14px; font-weight:600; color:var(--ikobe-black); }
+.score-bar-bg { flex:2; height:10px; background:#eee; border-radius:6px; overflow:hidden; margin:0 12px; }
+.score-bar-fill { height:100%; border-radius:6px; transition:width 0.8s ease; }
+.score-value { font-weight:700; color:var(--ikobe-black); width:30px; text-align:right; }
+.explanation { background:var(--ikobe-gray-bg); border-radius:12px; padding:24px; margin:24px 0; line-height:1.7; }
+.explanation h3 { color:var(--choosy-accent); margin-bottom:12px; font-size:18px; }
+.explanation p { margin-bottom:12px; }
+.app-footer { display:flex; justify-content:space-between; padding:16px 32px; font-size:12px; color:var(--ikobe-gray-light); border-top:1px solid #eee; }
+
+/* Weitere Angebote & About */
+.angebote-section { margin:28px 0; }
+.angebote-section h3 { color:var(--choosy-accent); font-size:18px; margin-bottom:12px; }
+.angebote-section p { margin-bottom:12px; line-height:1.7; }
+.angebote-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:16px 0; }
+@media(max-width:600px){.angebote-grid{grid-template-columns:1fr;}}
+.angebot-item { background:var(--ikobe-gray-bg); border-radius:10px; padding:16px; border-left:4px solid var(--choosy-accent); }
+.angebot-item .angebot-name { font-weight:700; color:var(--ikobe-black); font-size:15px; margin-bottom:4px; }
+.angebot-item .angebot-desc { font-size:13px; color:var(--ikobe-gray); line-height:1.5; }
+.about-card { background:var(--ikobe-gray-bg); border-radius:12px; padding:24px; margin:20px 0; }
+.about-card h3 { color:var(--choosy-accent); margin-bottom:10px; }
+.about-card p { margin-bottom:10px; line-height:1.7; font-size:14px; }
+.contact-box { background:white; border-radius:10px; padding:20px; border:1px solid #eee; margin-top:20px; }
+.contact-box p { margin-bottom:6px; font-size:14px; }
+.contact-box strong { color:var(--ikobe-black); }
+.comparison-table { width:100%; border-collapse:collapse; margin:20px 0; font-size:14px; }
+.comparison-table th { background:var(--choosy-accent-light); color:var(--choosy-accent-dark); padding:10px 12px; text-align:center; font-weight:600; }
+.comparison-table th:first-child { text-align:left; }
+.comparison-table td { padding:8px 12px; border-bottom:1px solid #f0f0f0; text-align:center; }
+.comparison-table td:first-child { text-align:left; font-weight:600; color:var(--ikobe-black); }
+.comparison-table tr:hover { background:#fafafa; }
+.diff-cell { font-weight:700; }
+.diff-low { color:#4caf50; }
+.diff-mid { color:#ff9800; }
+.diff-high { color:#f44336; }
+</style>
+</head>
+<body>
+<div class="app-container" id="app"></div>
+<script>
+
+const IKOBE_LOGO = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAscAAADNCAYAAABU8t1hAAA28UlEQVR4nO3dZ2AU1RoG4C+EhARCB5Em5SJNEewCIiAooFgQQakXxIINVFQEG6I0EUSsoGKjqjRFRUVFpOpVUZrU0EF6aEmAJPcHM995AzPZnW1p7/PnvneYPTu7OzMZ53xzTlRGRkaGEBERERGRFMjuDSAiIiIiyil4cUxEREREZOHFMRERERGRhRfHREREREQWXhwTEREREVl4cUxEREREZOHFMRERERGRhRfHREREREQWXhwTEREREVl4cUxEREREZOHFMRERERGRpWB2bwBFRnr6Cc3Ht38b0rbjzmmouWBcmZC2Taelp6drPnDggOaMjAxP7djrFygQrctKly6lOSoqKtBNJAq7tLQ0zSkpKZqPHz/udxuxsbGa4+LiNBcqVCjIrSOivIJ3jomIiIiILLw4JiIiIiKysKwin0g/maz5+LbPQtp2TLHqmllWER7YbVyrVm3NSUmHAmqvXLlymjds2KA5Pj4+oPbcrFq1SnP//v01ey3fwPKRXr16aW7Xrl0QWxdZ77//vuaZM2cF3R5+h71736/5xhvbBN12pJw4Ycq91qxZo3n58uWa5837QfOuXbs0b9u2TfOmTYkiIpKRYcou3JQsacqIqlatorlcuXM116tXT3OTJldrvuqqq0REpESJErqsQIHcf49p7ty5mt98800/XuF2/LqVeUX5+Hd/4HuadqKizPdfpEgRERGpX/8iXValivmNK1SooPmSSy7RnJCQAO3lr9IyPLceOXJE87Jlv2neu/dfzevXr9eM5/fU1FTNWAaYnZo2bar58ccf9/Ta3H9UExERERGFCC+OiYiIiIgsLKsgygWwqw+f2E/L1Ivsf5dlWlpkur2SkpI0f/XV1/AvXrsuzfotWrQIbqMiaObMmZoffriv5uTkZKfVPenZs6fmli2vDbq9cLC7V7ds2arLJk+erHnq1Kma16835T3YRZuZc9e6F/v27XfMCPfV4cNHaC5VqqSIiDRv3kyX9ejRQ/O115rfoXDhwgFtX3bYuXO35jlzvoJ/yZ0lBlOnTnNcjudRHKWnTZvWmnv37q358ssv1xwTExPKTcwWWMa0YMECEREZN26cLvvpp/ma9+83oyJ53w+CKZ8JndKlSwf8Wt45JiIiIiKy8OKYiIiIiMjCsgqiXMDrZB85Reie/M49n3/JkmWae/W6W3PmUgq38oAMh3832ra9UfNrr72qObsnsMCn07duNSUUo0aNEhGRiRNNKcWhQ4eCeKdA9wOvoys4O3DgkIiITJ9uymWmT5+huX6D+pof7/eE5ttvv00zTjySU2Rk5IzRBcINz6NYUvPJJ5M0T55kSn06dLxd8yuvjBQRkYoVK4ZzE0Nuw4aNmh999BHNc+Z87bC2m9xz/s0s8L8/vHNMRERERGThxTERERERkSVPlFUcTT2kOd2PQeD9ERNtuinjYxKyWJMo0nLPE+ThqQbJeV18mzdv1ty9ezfNBw8mwVpRLjnDZflpV1/dWPOHH36guWjRot43NIRwRIm33npb85AhQzSbJ979+ezh5FS6cua2eG3n7Db+Wr5Sc7duZj/44AMzAYxdaiIi0qBBA4/vHx75bN4LC94bNGUlaVAihKNeLF/+p4iIzJ49W5fVrFkzfJsXhBUrVmhu2/YmzVu3bnNanRzwzjERERERkYUXx0REREREljxRVrF4h+n6OJC6PSRtVi9+meYrKtwSkjaJKO/Ys2eP5o4dO2resGETrOVWNpB1OUHdunU0T5liRnoIZlD7UNi920wWcffdZiQObxO8eC2lCM1IEwbeEwp0W9xe5zzqw48/ztfcokVLzaNGvaK5a9eumgsWzJ1/mqPgt8rI1vInf0pn3EbocH7tP/+sExGRzp276LIffpinuXjx4t42McT27t2n+c47O2kOTSlFMKVQvo6ZUHFqP/D35J1jIiIiIiILL46JiIiIiCy5s++GiCgbHD16VPNdd/XS/Ntvf8Ba/nTlOXdTVqhQXkREZs40E0tUqlTJ62aG1Nq1azV36GDKR1asWAVrhXO4A+eRJgoUiNZcpkwZERGpUqWyLouONn/e8HdLTNysOTn5uOb0dH9+N1/r+O5+ticSERHp1etezZs2JWp+7rlnRSRy5RWhGlUGm3n66YGaL7jggtC8geXkyROat2wxk84sXbpERESWLFmqyzKPGIMC+71//90c66+8YkYeefHFwX60F1o4qcnIkS9rXr16DawVvtFhihQporl+/Ys0FytWTHNsbExAbYdiAql69eoF/FreOSYiIiIisvDimIiIiIjIwrIKIiIfTpw43Y3bp09fXeY+QoPz5AJuypYto3n27Fkikv2TC2zbtkNzu3a3aV6z5h9Yy59uz8C6cStWrKC5fXvz/tddd73mBg3qa05IOD1RU3x8vNk66JY9efKk5uTkZM1mkhKRuXO/0YwTPSxevExzamqKjy331lWPpRwvvviS5rS0NGuZ6aovUCDn38uKjjbfeZs2N2hu3LhhRN7fLjPYt8+M3PDuu+9qHjFipObDhw8H/X4ff/yR5r59+2i2y3zC7cABs/9++KHZligxJUcZfpyDnJl987rrzAgrffo8rPmKK67SXLKkGa0jJiawUoqcJOcfbUREREREEcKLYyIiIiIiC8sqiM6w8MBOzVO2rw+6vbho08U06oJGQbcX/sHUScR0bYuIPP/8IBHJ3HXpznc3ZtGi5invyZMnab7sssucVo8I7Gbu1OlOzWvWrHVaXbyNyuFcglGpUkXNTz89QPMdd9yhuWTJkn68T9ZiY2M14xP22P1dq5YpZenTx3SRr1y5UvPLL58eEWDqVDPx1KlT+Hvj5/SnO9t5Hft9/vOf6rrsrrvu8qO9/M0upSlbtqwuGzjQjJpx0UVmRIX27W/XfOKEKbvx4100YfkRjuoSqbKKn3/+WTNOAhLo6DEFCpjXvfDCC5r79++vOS+UTPiDd46JiIiIiCy8c0x0BnxIJioED8Fk7zSqFKhPPvlE88iRp6f5zXAdENb3bxwdbfalt956W3PLli2dVo8I/DxDhgzRvHjRkoDbxAfh7ObxjlSPHv/VPHz4MM14ty+74WfAsVI//vhjERHp2rWbLnvwwQc1b9yIU4f79U6QzW9x6tTpXotHH31Ul11xxRWaL7zwQo/vQyIirVu31nzzzTdp/vzzGU6ruzC/E54OFiz4RXPjxo0D2j6v1qxZ4/IvXsdaPw2nNn/qqac059bpzIPBO8dERERERBZeHBMRERERWfLfvXIiIhdz587V/MADprvcPJznNhWrczcmdkeOHGnGWO3SpVMwmxkyS5eaaXbHjn1Dc+ZP460sCEs1YmJOf/4RI0bosocffkhzbuuutcstWrUy4y3/9NOPmjt16qx50aLF8MrAurkPHzbTXj/66GOa58z5UnOhQoX8aDsyQjUNdbjg/taqVSvN/pVV2A9POt9TPHIk+HGTvcLxnANnfrQuXbpozm3HZqjxzjERERERkYUXx0RERERElvx935yIwioqsOE2fbUa0tZWrDDj2HbvbkZSSE52mirYrZTCudzimWee0YzTrkaF54vxW0rK6c/W/8mnzloWPPPZXnnl9CgfDz1kSlRywzTIXlSuXFnzrFkzNd9wg5k++bff/oBXeBnxxHyXP/5oyje++MKUVXTocLuQd3Xr1tWMI8mkpbmNT531MXvy5KlQbJYn27ZtD+LV9v5mPleDBhc5r5oP5a2zFBERERFREHhxTERERERkYVkFEeU727eb7shOnczIEZmnYHXiu5Tivnvv0zxggClbyEnlBAsWLBARkYWLFoW87fvuu1vzAw/cLyI567OHE04bPHXqVM3NmjXX7K0r3OxX6enmOxw9erTmW265WTNOk01Zi4kxo3z4V+bktE72Ds9RtixOU+02kk7W8LPHxsYFv1F5RP44YxERERER+YEXx0REREREFpZVULbZeThV86ItR7NY07vWNYtrLlqIuzmJHDx4SHO3bt01r1q1Btby1TXp3P3arl07zaNGv6I5J3Vzp6ebp/DHjHlNRDJP2OGd+S5q166pediwYZrz80QC1atX1zx06BDN3br912n1M9jfLf4+5vf73/9+17xkyRLNTZs29bqZIZXNg7B4snfvHs1mkp/AxcdHviThnHPOCbqNjAyzX+3fvxf+pVbQbedmvHNMRERERGThxTERERERkSX/9nlRtvv3iBk0fdY/h0La9tVVEjSzrCL/Sk01pTsPPmgmopg//+cAWzT9xs2aNdE8YcL7mosUKRJg2+G1ceMmzb/8stBKgT3hfub6zz33rOaSJUt637g87vbbzUQdb775lualS5fBWv7XJJw6Zc6dOCpGkyZmn8wvI4QE6s8/zcQsgVcXmd/svPOqBLdBATj//Jrw/3DyksDqW+bM+Upz48aNTWu5qV4mRHj0EBERERFZeHFMRERERGTx3N+cbA0eLyJyMjEx6A2ILl1ac5G2bYNuj4jyN+xyfu655zVPmTIF1gqsm7BBg4s0T548WXOJEiUCai+SfvjhB81HjwY6Ooz53mrVMl26N954Y6CblS/ExZmRDPr27aN56dIuLq/wv5//559NiVBycrLm7CjvycjI2d3vR44c0Tx16rSg24uNjdHcqFGjoNvzqmnTazQXLhyv+fjxFL/bwJKJiRMnaX7oIVOGVqlSpUA3MdfinWMiIiIiIgsvjomIiIiILJ7LKtKh20aOHQt6A9Lj432vRESUBZzg4q233tY8cuRI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sEsFxo83XeKpqSdcXuncJb5vnxmZYPp0U4Zw772RKUOoUKmC5latrhcRkcmTp8Aabl35vrv4Bw8erLlt27aaK1as4LR6voOlFCtWrIB/CWxfjosz5RPt298W6GaRg2rVqsL/w30/sN8qPT09mM0REZGDBw8G8Wrnz1CwIC//ssI7x0REREREFl4cExERERFZeF+dKJfJCMMIEJS1WrVOP9ndvHlzXTZ37rewBna5uv0+5l7E66+/rrlLly6aixQpEsxmZikKtrFPn4dERGTatGm6LC0tLeC2d+7crblfv36aP/roQxHJn6Mo/PHHH5qHDR0G/4L3pAI7lnE/rF+/fkBtkLPNm7fA/wu+hKtAgeDbKF++fNBtnGb2t8yfk87EO8dERERERBbeOSbKBTIyzH/xR4Xgbga2R77ZD6/07n2fLps7d67HVsx3vnLlKs0zZszU3K1b18A20KNLL71URERuu+1WXfbZZzNc1va2r0yb9qnmGjX+IyIizz//vC6Licm709Vu2WLuxnXpYn7Lg4cOwVpejl98gCpa8xNPPK45Z32fufO8gr0miYmbQtCi+d1KlCgRdGtFixb19J7uv4NZ5++//xIRkRMnzIPFsbGx3jcuj+KdYyIiIiIiCy+OiYiIiIgsLKsgIvJTixYtNFerVk1zYuJmjy2Z7s2hQ4dqvvXWW0TE327UwNllIi+88IIumzfvR83ex1V1Hkt16NDhIiKSnJysy1566SXN8fHxHt8n51m9erXmO+64Q/M//6yFtbyWQtnrm++1Q4fbNTdp0sRje5GBY4PnJitWrNS8aNHioNvDEpjKlSsH3V6NGjU0x8SYy7aTJ0/BWr5LKXCdBQsWiojIL78s1GUtWlwbzGbmKbxzTERERERk4cUxEREREZGFZRVEuQB2V3KkieyTkJCguUePHpqff35QwG2uXbtO86hRo0VEZNCg591WD6k6depoHjToOc19+z4Ka3l7Ch7XsXfVV199TZetWrVG85gxozXXrl3bn03OVvaT/ZMmTdJl/fs/pXnv3v2wtluJgT/f4WkVK1bUPGLEcM2c+jd4R44c0Yxjcx87lgxr+bPvn71ulSpVNGP5VaDq1aunuVKlSpoTE3GsYreprp232x6h4957zQg8X331pebccDyGE+8cExERERFZeHFMRERERGRh3wwRhU1ufXrdH7169dKM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IZYyjBkzxmf79mf257tKSEjQjF3UbvAYt39zPEdh9zx2M+O0227TrPuCZXJYhoWlbHg84OfHv384MoPTMYbHN5Zj4N8fHM8Y3xOvJ+bMmeP4Oey/rfa1gUjm6wC3aczd/m4je8QrHO0KSzYuueQSzXis4yhCbnD/sM/deOziKCBYyoHXBG5/Z3BfOXTokOYmTZqISOapwO1lIiLTpk3zud1YDuPrGg/P527Xd2j48OGacT/AUk+8HuzSpYuIhO5vOe8cExERERFZeHFMRERERGSJysgL88ISUb6B3Yq33XabiGQuuSEi8gVHLcHRpxYsWKDZrXSIch77UhZLS2fPnq3ZrdzNDe8cExERERFZeHFMRERERGTJFZOAEBEREYUKTgKCI+bUrVs3OzaHgmSPfoKTIHkdHQvxzjERERERkYUXx0REREREFpZVEBERUa732GOPiYjIjh07dFnp0qU1b9y4UTNORjNhwgTNOHkLZR+cvAQndsIJaxITEzXbEyuNGzdOl+HIFV7xzjERERERkYUXx0REREREFk4CQkS5yp9//qm5bNmyIiJSqVKl7NocIsohdu/eLSIi8+fP12X79u3TbJ8vRDJPJoTLKWfYs2ePZvw9cTmWWDRv3lxERMqVKxeS9+edYyIiIiIiCy+OiYiIiIgsLKsgIiIiIrLwzjERERERkYUXx0REREREFl4cExERERFZeHFMRERERGThxTERERERkYUXx0REREREFl4cExERERFZeHFMRERERGThxTERERERkYUXx0REREREFl4cExERERFZ/g8l2VEF9idlHgAAAABJRU5ErkJggg==';
+
+
+// ============================================================
+// CHOOSY Data – exakte Texte aus dem PDF
+// ============================================================
+
+const FIELDS = [
+  {
+    id: 'risikobereitschaft', name: 'Risikobereitschaft', icon: '\u{1F3AF}',
+    desc: 'Hier geht es vor allem um den Umgang mit ergebnisoffenen Situationen: Personen mit hoher Risikobereitschaft probieren Dinge aus und investieren, auch wenn der Ausgang ungewiss ist. Sie sehen ein Risiko als Chance zu gewinnen und nehmen gerne Herausforderungen an.'
+  },
+  {
+    id: 'praxisbezug', name: 'Praxisbezug', icon: '\u{1F527}',
+    desc: 'Hier geht es darum, wie und von wem jemand am besten lernt: Jemand mit hohem Praxisbezug m\u00f6chte Dinge tun, ausprobieren, den Nutzen erfahren und zwar am liebsten von Berufspraktikern.'
+  },
+  {
+    id: 'theoriebezug', name: 'Theoriebezug', icon: '\u{1F4DA}',
+    desc: 'Hier geht es um die Bedeutung von theoretischem Wissen und das Verh\u00e4ltnis von Theorie und Anwendung: Jemand mit hohem Theoriebezug m\u00f6chte Zusammenh\u00e4nge verstehen, findet Wissen als solches wertvoll und hat Spa\u00df am Denken, auch wenn es keinen direkten Praxisbezug gibt.'
+  },
+  {
+    id: 'lernbereitschaft', name: 'Lernbereitschaft', icon: '\u{1F9E0}',
+    desc: 'Gerne und mit Erfolg zu lernen, bezeichnet man als Lernbereitschaft. Jemand mit hoher Lernbereitschaft geht Dingen auf den Grund, arbeitet sich in neue Themen ein, h\u00e4lt sich fachlich auf dem Laufenden und findet es selbstverst\u00e4ndlich, lebenslang zu lernen.'
+  },
+  {
+    id: 'flexibilitaet', name: 'Flexibilit\u00e4t', icon: '\u{1F504}',
+    desc: 'Flexibilit\u00e4t bezeichnet die F\u00e4higkeit, schnell auf Ver\u00e4nderungen zu reagieren und sich auf diese einzustellen. Die St\u00e4rke flexibler Menschen ist es, Ideen zu entwickeln, auch in unerwarteten Situationen L\u00f6sungen zu finden und bereit zu sein, eigene Pl\u00e4ne zu \u00e4ndern.'
+  },
+  {
+    id: 'belastbarkeit', name: 'Belastbarkeit', icon: '\u{1F4AA}',
+    desc: 'Mit Belastbarkeit ist gemeint, wie stressresistent eine Person ist, d.h. wieviel Ressourcen sie hat, um auf Belastungen zu reagieren. Eine Person, die belastbar ist, l\u00e4sst sich nicht so schnell aus dem Gleichgewicht bringen, kann abschalten und auch in schwierigen Situationen noch leistungsf\u00e4hig sein.'
+  },
+  {
+    id: 'aufstiegsorientierung', name: 'Aufstiegsorientierung', icon: '\u{1F680}',
+    desc: 'Hier geht es um die Verwirklichung eigener Ziele, vor allem im beruflichen Bereich: Personen mit hoher Aufstiegsorientierung wollen eine gute Ausbildung, sie sind bereit, einiges daf\u00fcr zu tun und sie streben nach Ansehen und Aufstieg.'
+  }
+];
+
+const QUESTIONS = {
+  risikobereitschaft: [
+    "F\u00fcr mich geh\u00f6rt Risiko zum Erfolg dazu.",
+    "\u201eWas einen nicht umbringt, macht einen st\u00e4rker\u201c \u2013 sehe ich auch so.",
+    "Vom Typ her bin ich eher eine Unternehmerin, ein Unternehmer als ein Angestellter oder eine Angestellte.",
+    "F\u00fcr eine Weiterbildung w\u00fcrde ich auch Schulden aufnehmen.",
+    "Ich investiere jetzt in meine Weiterbildung, um sp\u00e4ter davon zu profitieren.",
+    "Ich probiere gerne Neues aus, auch wenn ich nicht wei\u00df, wie es ausgeht.",
+    "Je h\u00f6her das Risiko, desto gr\u00f6\u00dfer die Chancen.",
+    "Ich stehe auf Herausforderungen."
+  ],
+  praxisbezug: [
+    "Ich lerne am besten, wenn ich Dinge selbst ausprobiere.",
+    "Menschen aus der Praxis sind die besten Lehrer*innen.",
+    "Ich m\u00f6chte wissen, wozu ich das Gelernte mal brauche.",
+    "In Praktika kann ich gut erste Erfahrungen sammeln.",
+    "Ich finde es sinnvoll, Dinge zu lernen, die ich auch in der Praxis brauche.",
+    "Ich bin ein praktisch veranlagter Mensch.",
+    "In einer guten Ausbildung lerne ich, wie ich die Theorie in der Praxis umsetze.",
+    "Ich will unbedingt den praktischen Nutzen von etwas in der Ausbildung wissen."
+  ],
+  theoriebezug: [
+    "Ich bin eher ein Denker als ein Praktiker.",
+    "Beim Lernen will ich Zusammenh\u00e4nge ganz genau verstehen.",
+    "Ich muss nicht sofort wissen, wof\u00fcr ich das Gelernte brauche.",
+    "Ich sehe, dass in einem bestimmten Wissens- und Forschungsgebiet alles zusammenh\u00e4ngt.",
+    "Eine gute Infografik ersetzt f\u00fcr mich nicht eine ausf\u00fchrliche Erkl\u00e4rung.",
+    "Ich will Neues erforschen, erfinden, entdecken.",
+    "Ich akzeptiere, dass manche abstrakte Theorien noch keinen Praxisbezug haben.",
+    "Mich reizt es, \u00fcber komplizierte Sachverhalte nachzudenken."
+  ],
+  lernbereitschaft: [
+    "Wenn mich eine Sache interessiert, gehe ich ihr nach.",
+    "Ich m\u00f6chte geistig gefordert werden.",
+    "Ich arbeite mich gerne in ein neues Thema ein.",
+    "Ich update mein Wissen st\u00e4ndig.",
+    "Ich finde es super, Neues zu lernen.",
+    "Ich will meine Wissensl\u00fccken schlie\u00dfen.",
+    "Wenn ich etwas nicht wei\u00df, \u00e4rgert mich das.",
+    "Neues m\u00f6chte ich sofort und komplett verstehen."
+  ],
+  flexibilitaet: [
+    "F\u00fcr meine Traum-Ausbildung oder meinen Wunsch-Job w\u00fcrde ich umziehen.",
+    "Ich habe kein Problem damit, f\u00fcr andere einzuspringen.",
+    "Neuerungen in der Schule und am Arbeitsplatz finde ich cool.",
+    "Auf jeden Fall bin ich flexibel.",
+    "Ich plane und organisiere gerne Projekte wie Geburtstage, Reisen oder Turniere.",
+    "Ich bin offen f\u00fcr alternative Wege zum Ziel.",
+    "Wenn es sein muss, sage ich f\u00fcr wichtige Projekte meine eigentlichen Pl\u00e4ne ab.",
+    "Unerwartete Herausforderungen finde ich spannend."
+  ],
+  belastbarkeit: [
+    { text: "Pr\u00fcfungen oder berufliche Herausforderungen stressen mich nicht.", inverted: false },
+    { text: "Wenn es stressig wird, verliere ich schnell den \u00dcberblick.", inverted: true },
+    { text: "Ich lasse mich nicht unterkriegen.", inverted: false },
+    { text: "Frust halte ich gut aus.", inverted: false },
+    { text: "Ich schlafe auch in schwierigen Zeiten gut.", inverted: false },
+    { text: "Kritik vertrage ich gut.", inverted: false },
+    { text: "Scheitern h\u00e4lt mich nicht davon ab, am Ziel festzuhalten.", inverted: false },
+    { text: "Ich lasse mich schnell entmutigen, wenn etwas schiefl\u00e4uft.", inverted: true }
+  ],
+  aufstiegsorientierung: [
+    "Ich habe erfolgreiche Vorbilder.",
+    "Ich lerne und arbeite viel, um weit zu kommen.",
+    "Ich will auf jeden Fall einen akademischen Abschluss erreichen.",
+    "Ich will einen hohen Abschluss, um meine Chancen zu erh\u00f6hen.",
+    "Ich setze mir eigene Ziele.",
+    "Ich will mindestens so viel erreichen wie meine Eltern.",
+    "Andere sollen meinen Erfolg sehen k\u00f6nnen.",
+    "Ich will auf der Karriereleiter nach oben."
+  ]
+};
+
+// Referenzprofile aus den Diagrammen S. 13-15
+const PROFILES = {
+  berufsausbildung:     { risikobereitschaft:3, praxisbezug:10, theoriebezug:2, lernbereitschaft:3, flexibilitaet:7, belastbarkeit:5, aufstiegsorientierung:2 },
+  duales_studium:       { risikobereitschaft:4, praxisbezug:6,  theoriebezug:3, lernbereitschaft:5, flexibilitaet:7, belastbarkeit:8, aufstiegsorientierung:9 },
+  universitaetsstudium: { risikobereitschaft:8, praxisbezug:2,  theoriebezug:10,lernbereitschaft:10,flexibilitaet:6, belastbarkeit:8, aufstiegsorientierung:7 }
+};
+
+const PATH_INFO = {
+  berufsausbildung:     { name:'Berufsausbildung', icon:'\u{1F3ED}', color:'#4caf50' },
+  duales_studium:       { name:'Duales Studium, Hochschule', icon:'\u{1F393}', color:'#ff9800' },
+  universitaetsstudium: { name:'Universit\u00e4tsstudium', icon:'\u{1F3DB}', color:'#2196f3' }
+};
+
+// Erkl\u00e4rtexte S. 16 – exakt aus dem PDF
+const EXPLANATIONS = {
+  berufsausbildung: `<h3>\u{1F3ED} Wenn die Berufsausbildung am besten passt</h3>
+<p>F\u00fcr dich scheint eine Berufsausbildung die richtige Art der Ausbildung zu sein. Du willst gleich zupacken und Geld verdienen. Die Ergebnisse deiner Arbeit zu sehen und zu wissen, wo sie zur Anwendung kommen, ist dir wichtig. Die Einbindung in eine Firma gibt dir Sicherheit und Zukunftsperspektiven.</p>`,
+
+  duales_studium: `<h3>\u{1F393} Wenn das Duale Studium am besten passt</h3>
+<p>Ein duales Studium scheint f\u00fcr Dich genau die richtige Art der Ausbildung zu sein. Du magst die Mischung aus Theorie und Praxis, bist belastbar und flexibel und m\u00f6chtest schon w\u00e4hrend des Studiums Geld verdienen. Dar\u00fcber hinaus sch\u00e4tzt du es, gleich bei einem Unternehmen einzusteigen, weil dir dieser Umstand mehr Sicherheit und gute Aufstiegschancen bietet.</p>
+<p>Dir liegt als Ausbildungsart ein duales Studium am besten. Super, hierbei solltest du bestimmte Voraussetzungen mitbringen. So ben\u00f6tigst du beim dualen Studium meistens die allgemeine Hochschulreife \u2013 vorausgesetzt, du m\u00f6chtest an einer Hochschule studieren. Aber keine Panik, auch mit einer Fachhochschulreife ist an Fachhochschulen und Berufsakademien dual studieren m\u00f6glich. Und vergiss nicht: bei einem dualen Studium entscheiden Unternehmen mit. Die meisten Betriebe akzeptieren eine Fachhochschulreife, manche jedoch nicht. Wichtig ist, dass du dich sowohl bei der (Fach-) Hochschule, als auch beim Unternehmen \u00fcber die jeweiligen Voraussetzungen und Bewerbungsfristen etc. informierst.</p>`,
+
+  universitaetsstudium: `<h3>\u{1F3DB} Wenn das Uni-Studium am besten passt</h3>
+<p>Ein Studium scheint f\u00fcr dich die richtige Art der Ausbildung zu sein. Du m\u00f6chtest die Dinge im Detail verstehen und bist bereit, daf\u00fcr zu lernen. Du bist \u00fcberzeugt, dass es wichtig ist, zu forschen und das Wissen st\u00e4ndig zu erweitern. Wissenschaftlicher Fortschritt muss sich nicht sofort in der Praxis niederschlagen, denn am Anfang steht f\u00fcr dich zun\u00e4chst die Erkenntnis.</p>`
+};
+
+function sumToScale(sum) {
+  if (sum >= 37) return 10;
+  if (sum >= 33) return 9;
+  if (sum >= 29) return 8;
+  if (sum >= 25) return 7;
+  if (sum >= 21) return 6;
+  if (sum >= 17) return 5;
+  if (sum >= 13) return 4;
+  if (sum >= 9)  return 3;
+  if (sum >= 8)  return 2;
+  return 1;
+}
+
+let state = { page:'start', currentField:0, answers:{} };
+FIELDS.forEach(f => { state.answers[f.id] = new Array(8).fill(0); });
+
+function render() {
+  const app = document.getElementById('app');
+  let html = renderHeader();
+  switch(state.page) {
+    case 'start': html += renderStartPage(); break;
+    case 'fields': html += renderFieldsOverview(); break;
+    case 'test': html += renderTestPage(); break;
+    case 'results': html += renderResultsPage(); break;
+    case 'angebote': html += renderAngebotePage(); break;
+  }
+  html += renderFooter();
+  app.innerHTML = html;
+  if (state.page === 'results') setTimeout(drawRadarChart, 100);
+}
+
+function renderHeader() {
+  return `<header class="app-header">
+    <div class="ikobe-logo"><img src="${IKOBE_LOGO}" alt="IKOBE \u2013 Institut f\u00fcr Kompetenz und Begabung" class="logo-img" /></div>
+    <span class="header-url">www.ikobe.de</span>
+  </header>`;
+}
+
+function renderFooter() {
+  return `<footer class="app-footer">
+    <span>CHOOSY \u2013 Der Ausbildungs-Weg-Check</span>
+    <span>\u00a9 Copyright \u2013 Alle Rechte bei IKOBE</span>
+  </footer>`;
+}
+
+function renderStartPage() {
+  return `<div class="content page">
+    <div class="hero">
+      <div class="hero-badge">Beratungs-Power</div>
+      <h1><span>CHOOSY</span></h1>
+      <div class="subtitle">Der Ausbildungs-Weg-Check</div>
+      <p class="tagline">Wichtiger f\u00fcr den Erfolg in der Ausbildung als viele glauben</p>
+
+      <div class="hero-arrows">
+        <div class="hero-path"><div class="path-icon">\u{1F3ED}</div><div class="path-label">Berufs\u00ADausbildung?</div></div>
+        <div class="hero-path"><div class="path-icon">\u{1F393}</div><div class="path-label">Duales Studium?</div></div>
+        <div class="hero-path"><div class="path-icon">\u{1F3DB}</div><div class="path-label">Uni-Studium?</div></div>
+      </div>
+
+      <p style="font-size:15px;color:var(--ikobe-gray);margin:20px auto;max-width:560px;text-align:center;">Strukturierter Fragebogen-Test zum Thema<br>\u201eWelcher Ausbildungsweg ist der richtige f\u00fcr mich?\u201c</p>
+      <div style="display:flex;justify-content:center;gap:16px;margin:12px 0;font-size:14px;font-weight:600;color:var(--choosy-accent-dark);">
+        <span>Testfragen</span><span>\u00b7</span><span>Auswertung</span><span>\u00b7</span><span>Interpretation der Ergebnisse</span>
+      </div>
+
+      <div class="intro-text">
+        <p>Ein spannendes Tool f\u00fcr alle Spezialistinnen und Spezialisten in der Berufs- und Studienberatung und im Talentmanagement, die junge Menschen ab 15 Jahren zum Traumberuf f\u00fchren und f\u00fcr Unternehmen geeignete Auszubildende finden.</p>
+        <p>Welcher Ausbildungs-Weg ist der Richtige f\u00fcr Ihre Klientin oder Ihren Klienten, Ihren Sohn oder Ihre Tochter? Das ist bis jetzt ein str\u00e4flich untersch\u00e4tzter Aspekt, der aber \u00fcber den Ausbildungserfolg mitentscheidet.</p>
+        <p>Wir stellen Ihnen hier einen Test zur Verf\u00fcgung, den Sie gemeinsam mit Ihren Jugendlichen oder Ihrem Kind machen k\u00f6nnen.</p>
+        <p>Mit dem <strong>Ausbildungs-Weg-Check \u201eCHOOSY\u201c</strong> k\u00f6nnen Sie fundiert feststellen, ob ein Uni-Studium, ein Hochschulstudium, ein Duales Studium oder eine Berufsausbildung zur momentanen Einstellung und Situation sowie zur Pers\u00f6nlichkeit passt.</p>
+        <p>CHOOSY findet anhand von sieben essentiellen Entscheidungsfeldern heraus, welcher Ausbildungstyp Ihr junger Klient oder Ihre junge Klientin, Ihre Tochter oder Ihr Sohn ist.</p>
+      </div>
+
+      <div class="meta-info">
+        <span>\u23F1 ca. 10 Min.</span>
+        <span>\u{1F4CB} 56 Fragen</span>
+        <span>\u{1F4CA} 7 Felder</span>
+      </div>
+      <p style="font-size:14px;color:var(--ikobe-gray-light);margin:16px 0;">Den Fragebogen bearbeitet die oder der Jugendliche. Sie k\u00f6nnen ihn aber mit Einverst\u00e4ndnis auch gemeinsam ausf\u00fcllen.<br>Je ehrlicher man beim Ausf\u00fcllen ist, desto treffender wird das Ergebnis.</p>
+      <button class="btn-primary" onclick="goToFields()" style="margin-top:16px;">Test starten</button>
+    </div>
+  </div>`;
+}
+
+function renderFieldsOverview() {
+  let cards = FIELDS.map((f,i) => `
+    <div class="field-card">
+      <div class="card-icon">${f.icon}</div>
+      <div class="card-number">Entscheidungsfeld ${i+1}</div>
+      <div class="card-title">${f.name}</div>
+      <div class="card-desc">${f.desc}</div>
+    </div>`).join('');
+  return `<div class="content page">
+    <h2 class="section-title">Die 7 Entscheidungsfelder</h2>
+    <p>Sieben Entscheidungsfelder bestimmen ma\u00dfgeblich mit, welcher Ausbildungs-Weg f\u00fcr uns der Richtige ist:</p>
+    <div class="fields-grid">${cards}</div>
+    <div style="text-align:center;margin-top:24px;">
+      <button class="btn-secondary" onclick="goToStart()" style="margin-right:12px;">Zur\u00fcck</button>
+      <button class="btn-primary" onclick="startTest()">Jetzt loslegen</button>
+    </div>
+  </div>`;
+}
+
+function renderTestPage() {
+  const field = FIELDS[state.currentField];
+  const questions = QUESTIONS[field.id];
+  const answers = state.answers[field.id];
+  const answeredBefore = state.currentField * 8;
+  const answeredThisField = answers.filter(a => a > 0).length;
+  const totalAnswered = answeredBefore + answeredThisField;
+  const progress = Math.round((totalAnswered / 56) * 100);
+  const allAnswered = answers.every(a => a > 0);
+
+  let qHtml = questions.map((q,i) => {
+    const text = typeof q === 'string' ? q : q.text;
+    const sel = answers[i];
+    const pct = sel > 0 ? ((sel-1)/4)*100 : 0;
+    let labels = [1,2,3,4,5].map(v =>
+      `<button class="slider-label ${sel===v?'active':''}" onclick="setAnswer(${i},${v})">${v}</button>`
+    ).join('');
+    return `<div class="question-item"><div class="question-text">${text}</div>
+      <div class="slider-container">
+        <div class="slider-labels">${labels}</div>
+        <div class="slider-track-wrapper" onclick="trackClick(event,${i})">
+          <div class="slider-track ${sel>0?'has-value':''}" style="--slider-percent:${pct}%">
+            ${sel>0?`<div class="slider-thumb" style="left:${pct}%"></div>`:''}
+          </div>
+        </div>
+        <div class="slider-descriptions">
+          <span class="slider-desc-left">trifft gar nicht zu / nie</span>
+          <span class="slider-desc-right">trifft vollkommen zu / immer</span>
+        </div>
+      </div></div>`;
+  }).join('');
+
+  return `<div class="content page">
+    <div class="test-sticky-header">
+      <div class="progress-container"><div class="progress-bar" style="width:${progress}%"></div></div>
+      <div class="progress-label">
+        <span>Entscheidungsfeld ${state.currentField+1} von 7</span>
+        <span>${totalAnswered} / 56 Fragen</span>
+      </div>
+      <div class="question-header">
+        <span style="font-size:28px;">${field.icon}</span>
+        <span class="field-badge">Entscheidungsfeld ${state.currentField+1}</span>
+      </div>
+      <h2 class="section-title" style="margin-bottom:4px;">${field.name}</h2>
+      <div class="scale-legend-compact">
+        <span><b>1</b> trifft gar nicht zu</span>
+        <span><b>2</b> trifft weniger zu</span>
+        <span><b>3</b> trifft teilweise zu</span>
+        <span><b>4</b> trifft weitgehend zu</span>
+        <span><b>5</b> trifft vollkommen zu</span>
+      </div>
+    </div>
+    <p style="font-size:14px;color:var(--ikobe-gray-light);margin-bottom:16px;margin-top:12px;">Das beste Ergebnis erh\u00e4lt, wer ehrlich und spontan antwortet.</p>
+    ${qHtml}
+    <div class="nav-buttons">
+      <button class="btn-secondary" onclick="prevField()" ${state.currentField===0?'disabled style="opacity:0.4;cursor:default;"':''}>← Zur\u00fcck</button>
+      ${state.currentField<6
+        ? `<button class="btn-primary" onclick="nextField()" ${!allAnswered?'disabled style="opacity:0.5;cursor:default;"':''}>Weiter \u2192</button>`
+        : `<button class="btn-primary" onclick="showResults()" ${!allAnswered?'disabled style="opacity:0.5;cursor:default;"':''}>Ergebnis anzeigen</button>`
+      }
+    </div>
+  </div>`;
+}
+
+function renderResultsPage() {
+  const scores = {};
+  FIELDS.forEach(f => {
+    const qs = QUESTIONS[f.id];
+    let sum = 0;
+    state.answers[f.id].forEach((val,i) => {
+      const q = qs[i];
+      if (typeof q === 'object' && q.inverted) sum += (6-val);
+      else sum += val;
+    });
+    scores[f.id] = { sum, scale: sumToScale(sum) };
+  });
+
+  const diffs = {};
+  let minDiff = Infinity, bestPath = '';
+  Object.keys(PROFILES).forEach(path => {
+    let total = 0;
+    const fd = {};
+    FIELDS.forEach(f => {
+      const d = Math.abs(scores[f.id].scale - PROFILES[path][f.id]);
+      fd[f.id] = d;
+      total += d;
+    });
+    diffs[path] = { fieldDiffs:fd, totalDiff:total };
+    if (total < minDiff) { minDiff = total; bestPath = path; }
+  });
+
+  const sorted = Object.keys(diffs).sort((a,b) => diffs[a].totalDiff - diffs[b].totalDiff);
+  const ranks = ['\u{1F947}','\u{1F948}','\u{1F949}'];
+
+  let resultCards = sorted.map((p,i) => {
+    const info = PATH_INFO[p];
+    return `<div class="result-card ${i===0?'winner':''}">
+      <div class="card-rank">${ranks[i]}</div>
+      <div class="card-path-name">${info.icon} ${info.name}</div>
+      <div class="card-diff" style="color:${info.color}">${diffs[p].totalDiff}</div>
+      <div class="card-diff-label">Differenzsumme</div>
+    </div>`;
+  }).join('');
+
+  const fc = ['#f48fb1','#8bc34a','#9c27b0','#ffb74d','#29b6f6','#4db6ac','#03a9f4'];
+  let scoreBars = FIELDS.map((f,i) => `<div class="score-row">
+    <span class="score-label">${f.icon} ${f.name}</span>
+    <div class="score-bar-bg"><div class="score-bar-fill" style="width:${scores[f.id].scale*10}%;background:${fc[i]};"></div></div>
+    <span class="score-value">${scores[f.id].scale}</span>
+  </div>`).join('');
+
+  let tableRows = FIELDS.map(f => {
+    let cells = sorted.map(p => {
+      const d = diffs[p].fieldDiffs[f.id];
+      const cls = d<=2?'diff-low':d<=4?'diff-mid':'diff-high';
+      return `<td>${PROFILES[p][f.id]}</td><td class="diff-cell ${cls}">${d}</td>`;
+    }).join('');
+    return `<tr><td>${f.name}</td><td>${scores[f.id].scale}</td>${cells}</tr>`;
+  }).join('');
+
+  let tableHead = sorted.map(p => `<th>${PATH_INFO[p].name}<br><small>Profil</small></th><th>Diff</th>`).join('');
+
+  return `<div class="content page">
+    <div class="result-banner">
+      <span class="best-path-icon">${PATH_INFO[bestPath].icon}</span>
+      <h2>Endergebnis: Der Ausbildungs-Weg</h2>
+      <div class="best-path">${PATH_INFO[bestPath].name}</div>
+      <div class="diff-info">Die kleinste Differenzsumme markiert den Ausbildungsweg mit den gr\u00f6\u00dften Erfolgsaussichten.</div>
+    </div>
+
+    <div class="result-cards">${resultCards}</div>
+
+    <h2 class="section-title" style="margin-top:32px;">Dein Profil: Die 7 Entscheidungsfelder</h2>
+    <div class="field-scores">${scoreBars}</div>
+
+    <h2 class="section-title" style="margin-top:32px;">Profilvergleich</h2>
+    <div class="chart-container"><canvas id="radarChart" width="500" height="400"></canvas></div>
+
+    <h2 class="section-title" style="margin-top:32px;">Detailvergleich</h2>
+    <div style="overflow-x:auto;">
+      <table class="comparison-table">
+        <tr><th>Entscheidungsfeld</th><th>Dein Wert</th>${tableHead}</tr>
+        ${tableRows}
+        <tr style="font-weight:700;background:#fafafa;">
+          <td>Summe der Differenzen</td><td></td>
+          ${sorted.map(p=>`<td></td><td class="diff-cell" style="font-size:18px;">${diffs[p].totalDiff}</td>`).join('')}
+        </tr>
+      </table>
+    </div>
+
+    <div class="explanation">${EXPLANATIONS[bestPath]}</div>
+
+    <div style="text-align:center;margin:32px 0;">
+      <button class="btn-secondary" onclick="goToStart()" style="margin-right:12px;">Neuer Test</button>
+      <button class="btn-secondary" onclick="goToAngebote()" style="margin-top:12px;">Weitere Angebote von IKOBE</button>
+    </div>
+  </div>`;
+}
+
+function renderAngebotePage() {
+  return `<div class="content page">
+    <h2 class="section-title">Beratungs-Power: So helfen Sie Jugendlichen, den passenden Traumberuf zu finden</h2>
+
+    <div class="angebote-section">
+      <h3>Tests zur Berufs- und Studienorientierung</h3>
+      <div class="angebote-grid">
+        <div class="angebot-item">
+          <div class="angebot-name">BerufsCheck</div>
+          <div class="angebot-desc">Zwei Tests zur Berufs- und Studienorientierung, bew\u00e4hrt, professionell, aussagekr\u00e4ftig. Zehntausende von Sch\u00fclerinnen und Sch\u00fclern haben bereits von den Empfehlungen profitiert. Schulen, IHK und Stiftungen setzen die Tools erfolgreich ein, um jungen Menschen Perspektiven aufzuzeigen.</div>
+        </div>
+        <div class="angebot-item">
+          <div class="angebot-name">KompetenzCheck</div>
+          <div class="angebot-desc">Zwei Tests zur Berufs- und Studienorientierung, bew\u00e4hrt, professionell, aussagekr\u00e4ftig. Zehntausende von Sch\u00fclerinnen und Sch\u00fclern haben bereits von den Empfehlungen profitiert.</div>
+        </div>
+        <div class="angebot-item" style="border-left-color:var(--choosy-accent);">
+          <div class="angebot-name">CHOOSY \u2013 Der Ausbildungs-Weg-Check</div>
+          <div class="angebot-desc">Der Test, den Sie gerade durchgef\u00fchrt haben.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="angebote-section">
+      <h3>P\u00e4dagogik-Power: Kinder unterst\u00fctzen bei der Talentsuche, bei Schul- und anderen wichtigen Lebensfragen</h3>
+
+      <h3 style="font-size:16px;margin-top:20px;">B\u00fccher</h3>
+      <div class="angebote-grid">
+        <div class="angebot-item" style="border-left-color:var(--ikobe-bar-2);">
+          <div class="angebot-name">\u201eTalente entdecken und f\u00f6rdern\u201c</div>
+          <div class="angebot-desc">G&U-Verlag</div>
+        </div>
+        <div class="angebot-item" style="border-left-color:var(--ikobe-bar-2);">
+          <div class="angebot-name">\u201eDer gro\u00dfe Begabungstest\u201c</div>
+          <div class="angebot-desc">Moses-Verlag</div>
+        </div>
+        <div class="angebot-item" style="border-left-color:var(--ikobe-bar-2);">
+          <div class="angebot-name">\u201eF\u00f6rder-Guide Talente\u201c</div>
+          <div class="angebot-desc">IKOBE Institut</div>
+        </div>
+      </div>
+      <p style="font-size:14px;color:var(--ikobe-gray);">In unseren B\u00fcchern finden Sie viele interessante und hilfreiche Infos zum Thema Talente. In jedem Buch haben wir einen Test integriert, mit dem Sie selbst testen und herausfinden k\u00f6nnen, wo bei Ihrem Kind Talente schlummern.</p>
+
+      <h3 style="font-size:16px;margin-top:20px;">Tests</h3>
+      <div class="angebote-grid">
+        <div class="angebot-item" style="border-left-color:var(--ikobe-bar-2);">
+          <div class="angebot-name">Talentometer</div>
+          <div class="angebot-desc">Ein Fragebogen-Check f\u00fcr Eltern und Kinder. Systematisch begeben Sie sich hier auf eine Entdeckungsreise zu den Talenten Ihres Kindes.</div>
+        </div>
+        <div class="angebot-item" style="border-left-color:var(--ikobe-bar-5);">
+          <div class="angebot-name">BegabungsCheck</div>
+          <div class="angebot-desc">Wenn Sie es ganz genau wissen m\u00f6chten. Mit dem Tages-Assessment BegabungsCheck erhalten Sie einen professionellen, unabh\u00e4ngigen und ganzheitlichen Blick auf das komplette Begabungspotenzial Ihres Kindes.</div>
+        </div>
+        <div class="angebot-item" style="border-left-color:var(--ikobe-bar-4);">
+          <div class="angebot-name">Der MOBBIT</div>
+          <div class="angebot-desc">Wird mein Kind gemobbt? Ein Mobbingtest zur Fr\u00fcherkennung.</div>
+        </div>
+        <div class="angebot-item" style="border-left-color:var(--ikobe-bar-3);">
+          <div class="angebot-name">T.I.M.O.S.</div>
+          <div class="angebot-desc">Der Test zur Erkennung von Internet-, Medien- und Online-Sucht.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="about-card">
+      <h3>Ihr Erfolgs-System CHECKIDY\u00a9</h3>
+      <p>Seit 2019 unterst\u00fctze ich nun erfolgreich Berater und Beraterinnen in der Berufs- und Studienorientierung, genauso wie berufliche Bildungseinrichtungen, bei denen die Prozesse noch nicht digitalisiert, die Verwaltung aufwendig und die beruflichen Testverfahren, wenn vorhanden, uneinheitlich, teuer oder nicht zielf\u00fchrend sind.</p>
+      <p>Mit CHECKIDY\u00a9, der innovativen Management-Plattform f\u00fcr Workshops und Testverfahren, k\u00f6nnen Sie jetzt Ihre Beratungen und Workshops digitalisieren, die Organisation einfach, ortsunabh\u00e4ngig, rechtssicher und in Top-Qualit\u00e4t managen, fantastischen Content durch bew\u00e4hrte, aussagekr\u00e4ftige Testverfahren generieren, und das alles, nach konkreten Erfahrungen, mit dem halben Verwaltungsaufwand.</p>
+      <p>Mit CHECKIDY\u00a9 zeigen Sie nicht nur jungen Menschen fundierte, nachhaltige berufliche Perspektiven auf, sondern erzielen auch, wenn Sie m\u00f6chten, passgenaue und nachhaltige Vermittlungserfolge f\u00fcr die Ausbildungspl\u00e4tze von Unternehmenskunden und Firmen-Netzwerkpartnern, und helfen so, Fachkr\u00e4ftenachwuchs zu sichern.</p>
+      <p>Das alles in einem hervorragenden Preis-Leistungs-Verh\u00e4ltnis, bezahlbar und benutzerfreundlich, au\u00dferdem unabh\u00e4ngig von IT-Experten, teurer Hard- und Software oder Testspezialisten. Sie haben die Kontrolle und sind der Boss bei allen Vorg\u00e4ngen.</p>
+      <p style="font-style:italic;margin-top:16px;">Ihr Thomas von Krafft<br>mit IKOBE-Team</p>
+    </div>
+
+    <div class="contact-box">
+      <p><strong>IKOBE Institut f\u00fcr Kompetenz und Begabung</strong></p>
+      <p>Hauptstra\u00dfe 25, 86498 Kettershausen</p>
+      <p>Festnetz: 0049-8333 / 93 58 11</p>
+      <p>Mobil/WhatsApp/SMS: 0049-173 / 35 90 314</p>
+      <p>E-Mail: tvk@ikobe.de</p>
+      <p>Webseite: <a href="https://www.ikobe.de" style="color:var(--ikobe-pink);">www.ikobe.de</a></p>
+    </div>
+
+    <p style="text-align:center;font-size:14px;color:var(--ikobe-gray-light);margin:24px 0;">Das und noch einiges mehr finden Sie auf unserer Internetseite <a href="https://www.ikobe.de" style="color:var(--ikobe-pink);">www.ikobe.de</a><br>Wir freuen uns aber auch auf Ihre Nachricht.</p>
+
+    <div style="text-align:center;margin:24px 0;">
+      <button class="btn-secondary" onclick="showResults()">Zur\u00fcck zum Ergebnis</button>
+    </div>
+  </div>`;
+}
+
+function drawRadarChart() {
+  const canvas = document.getElementById('radarChart');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W=canvas.width, H=canvas.height, cx=W/2, cy=H/2-10;
+  const R = Math.min(W,H)*0.38, n=7;
+  const labels = FIELDS.map(f=>f.name);
+
+  const scores = {};
+  FIELDS.forEach(f => {
+    const qs = QUESTIONS[f.id];
+    let sum = 0;
+    state.answers[f.id].forEach((v,i) => {
+      const q = qs[i];
+      if(typeof q==='object'&&q.inverted) sum+=(6-v); else sum+=v;
+    });
+    scores[f.id] = sumToScale(sum);
+  });
+
+  function ang(i){return(Math.PI*2*i/n)-Math.PI/2;}
+  function pt(i,v){const a=ang(i),r=(v/10)*R;return[cx+r*Math.cos(a),cy+r*Math.sin(a)];}
+
+  ctx.clearRect(0,0,W,H);
+  for(let l=2;l<=10;l+=2){
+    ctx.beginPath();
+    for(let i=0;i<=n;i++){const[x,y]=pt(i%n,l);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);}
+    ctx.strokeStyle='#e0e0e0';ctx.lineWidth=1;ctx.stroke();
+    const[lx,ly]=pt(0,l);ctx.fillStyle='#bbb';ctx.font='11px Open Sans';ctx.fillText(l,lx+4,ly-4);
+  }
+  for(let i=0;i<n;i++){
+    const[x,y]=pt(i,10);ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(x,y);ctx.strokeStyle='#e0e0e0';ctx.stroke();
+    const[lx,ly]=pt(i,11.5);ctx.fillStyle='#555';ctx.font='12px Open Sans';ctx.textAlign='center';ctx.fillText(labels[i],lx,ly+4);
+  }
+
+  function drawP(data,color,alpha,dash){
+    ctx.beginPath();
+    for(let i=0;i<=n;i++){const fid=FIELDS[i%n].id;const v=data[fid];const[x,y]=pt(i%n,v);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);}
+    ctx.closePath();ctx.fillStyle=color.replace(')',`,${alpha})`).replace('rgb','rgba');ctx.fill();
+    ctx.strokeStyle=color;ctx.lineWidth=2;if(dash)ctx.setLineDash([6,3]);else ctx.setLineDash([]);ctx.stroke();ctx.setLineDash([]);
+  }
+
+  const up={};FIELDS.forEach(f=>{up[f.id]=scores[f.id];});
+  drawP(up,'rgb(3,169,244)',0.15,false);
+  drawP(PROFILES.berufsausbildung,'rgb(76,175,80)',0.05,true);
+  drawP(PROFILES.duales_studium,'rgb(255,152,0)',0.05,true);
+  drawP(PROFILES.universitaetsstudium,'rgb(33,150,243)',0.05,true);
+
+  for(let i=0;i<n;i++){
+    const[x,y]=pt(i,scores[FIELDS[i].id]);
+    ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.fillStyle='#03a9f4';ctx.fill();ctx.strokeStyle='white';ctx.lineWidth=2;ctx.stroke();
+  }
+
+  const ly2=H-30;
+  [{l:'Dein Profil',c:'#03a9f4',d:false},{l:'Berufsausb.',c:'#4caf50',d:true},{l:'Duales St.',c:'#ff9800',d:true},{l:'Uni-Studium',c:'#2196f3',d:true}].reduce((lx,it)=>{
+    ctx.beginPath();ctx.moveTo(lx,ly2);ctx.lineTo(lx+24,ly2);ctx.strokeStyle=it.c;ctx.lineWidth=3;
+    if(it.d)ctx.setLineDash([4,3]);else ctx.setLineDash([]);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#555';ctx.font='11px Open Sans';ctx.textAlign='left';ctx.fillText(it.l,lx+28,ly2+4);
+    return lx+110;
+  },60);
+}
+
+function goToStart(){state.page='start';state.currentField=0;FIELDS.forEach(f=>{state.answers[f.id]=new Array(8).fill(0);});render();window.scrollTo(0,0);}
+function goToFields(){state.page='fields';render();window.scrollTo(0,0);}
+function startTest(){state.page='test';state.currentField=0;render();window.scrollTo(0,0);}
+function trackClick(event,qi){
+  const rect=event.currentTarget.getBoundingClientRect();
+  const x=event.clientX-rect.left;
+  const pct=x/rect.width;
+  const val=Math.min(5,Math.max(1,Math.round(pct*4+1)));
+  setAnswer(qi,val);
+}
+function setAnswer(qi,v){
+  state.answers[FIELDS[state.currentField].id][qi]=v;
+  // Update only the affected slider (no full re-render)
+  const items=document.querySelectorAll('.question-item');
+  if(items[qi]){
+    const pct=((v-1)/4)*100;
+    // Update circle labels
+    items[qi].querySelectorAll('.slider-label').forEach((btn,idx)=>{
+      btn.classList.toggle('active',(idx+1)===v);
+    });
+    // Update track
+    const track=items[qi].querySelector('.slider-track');
+    if(track){
+      track.classList.add('has-value');
+      track.style.setProperty('--slider-percent',pct+'%');
+      let thumb=track.querySelector('.slider-thumb');
+      if(!thumb){thumb=document.createElement('div');thumb.className='slider-thumb';track.appendChild(thumb);}
+      thumb.style.left=pct+'%';
+    }
+  }
+  // Update progress bar and label
+  const answers=state.answers[FIELDS[state.currentField].id];
+  const answeredBefore=state.currentField*8;
+  const answeredThisField=answers.filter(a=>a>0).length;
+  const totalAnswered=answeredBefore+answeredThisField;
+  const progress=Math.round((totalAnswered/56)*100);
+  const pBar=document.querySelector('.progress-bar');
+  if(pBar)pBar.style.width=progress+'%';
+  const pLabels=document.querySelectorAll('.progress-label span');
+  if(pLabels[1])pLabels[1].textContent=totalAnswered+' / 56 Fragen';
+  // Update nav button state
+  const allAnswered=answers.every(a=>a>0);
+  const navBtns=document.querySelectorAll('.nav-buttons button');
+  const fwdBtn=navBtns[navBtns.length-1];
+  if(fwdBtn){
+    if(allAnswered){fwdBtn.disabled=false;fwdBtn.style.opacity='1';fwdBtn.style.cursor='pointer';}
+    else{fwdBtn.disabled=true;fwdBtn.style.opacity='0.5';fwdBtn.style.cursor='default';}
+  }
+}
+function nextField(){if(state.currentField<6){state.currentField++;state.page='test';render();window.scrollTo(0,0);}}
+function prevField(){if(state.currentField>0){state.currentField--;render();window.scrollTo(0,0);}else goToFields();}
+function showResults(){state.page='results';render();window.scrollTo(0,0);}
+function goToAngebote(){state.page='angebote';render();window.scrollTo(0,0);}
+
+
+render();
+</script>
+</body>
+</html>
