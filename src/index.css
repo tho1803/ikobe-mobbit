@@ -9,12 +9,13 @@
   --ikobe-white: #ffffff;
   --ikobe-black: #333333;
 
-  /* Bunte Balken des Logos */
-  --ikobe-bar-1: #8bc34a; /* grün */
-  --ikobe-bar-2: #ff9800; /* orange */
-  --ikobe-bar-3: #e91e63; /* pink */
-  --ikobe-bar-4: #2196f3; /* blau */
-  --ikobe-bar-5: #9c27b0; /* lila */
+  /* Logo-Balken-Farben (7 Balken in 2 Gruppen) */
+  --ikobe-bar-1: #f48fb1; /* rosa/salmon */
+  --ikobe-bar-2: #8bc34a; /* lime-grün */
+  --ikobe-bar-3: #9c27b0; /* lila/magenta */
+  --ikobe-bar-4: #ffb74d; /* orange/gold */
+  --ikobe-bar-5: #29b6f6; /* hellblau/cyan */
+  --ikobe-bar-6: #4db6ac; /* türkis/mint */
 
   /* Antwort-Farben */
   --answer-0: #e0e0e0;

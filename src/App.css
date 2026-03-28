@@ -33,30 +33,12 @@
 .ikobe-logo {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--ikobe-black);
-  letter-spacing: 1px;
 }
 
-.logo-bars {
-  display: flex;
-  gap: 2px;
-  align-items: flex-end;
-  height: 28px;
+.logo-img {
+  height: 36px;
+  width: auto;
 }
-
-.logo-bar {
-  width: 5px;
-  border-radius: 2px;
-}
-
-.logo-bar:nth-child(1) { height: 14px; background: var(--ikobe-bar-1); }
-.logo-bar:nth-child(2) { height: 22px; background: var(--ikobe-bar-2); }
-.logo-bar:nth-child(3) { height: 10px; background: var(--ikobe-bar-3); }
-.logo-bar:nth-child(4) { height: 28px; background: var(--ikobe-bar-4); }
-.logo-bar:nth-child(5) { height: 18px; background: var(--ikobe-bar-5); }
 
 .header-url {
   font-size: 13px;
@@ -945,7 +927,7 @@
    FOOTER
    ============================ */
 .app-footer {
-  padding: 20px 40px;
+  padding: 16px 32px;
   border-top: 1px solid #eee;
   display: flex;
   justify-content: space-between;
